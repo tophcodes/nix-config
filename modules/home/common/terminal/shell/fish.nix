@@ -20,11 +20,13 @@ in {
     '';
 
     functions = {
-      nomad-ui = {
-        description = "Fetches the Nomad management token from alvin and opens the authenticated UI";
+      nomad-auth = {
+        description = "Fetches the Nomad management token from alvin. Pass --ui to also open the authenticated UI.";
         body = ''
           set -gx NOMAD_TOKEN (ssh root@alvin cat /var/lib/nomad-acl/management.token)
-          nomad ui -authenticate
+          if contains -- --ui $argv
+            nomad ui -authenticate
+          end
         '';
       };
       agx = {
