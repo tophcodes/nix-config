@@ -8,5 +8,6 @@
     cat = "bat";
     vim = "hx";
     vi = "hx";
+    trash = "trash-put";
   };
 }
