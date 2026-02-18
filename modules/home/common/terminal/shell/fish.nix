@@ -20,11 +20,29 @@ in {
     '';
 
     functions = {
+      nomad-ui = {
+        description = "Fetches the Nomad management token from alvin and opens the authenticated UI";
+        body = ''
+          set -gx NOMAD_TOKEN (ssh root@alvin cat /var/lib/nomad-acl/management.token)
+          nomad ui -authenticate
+        '';
+      };
       agx = {
         wraps = "ag";
         description = "Runs ag on the given string and returns a list of selectable references of the result. The selection is then opened in the editor.";
         body = ''
           hx (ag $search $argv[2..] | fzf | cut -d : -f 1,2)
+        '';
+      };
+      __np_expand = {
+        description = "Expands --np contextually: --pp for bat/cat, --no-pager otherwise";
+        body = ''
+          set -l cmd (commandline -po)[1]
+          if test "$cmd" = bat -o "$cmd" = cat
+            echo -- --pp
+          else
+            echo -- --no-pager
+          end
         '';
       };
     };
@@ -51,6 +69,10 @@ in {
       "-C" = {
         position = "anywhere";
         expansion = "--color";
+      };
+      "--np" = {
+        position = "anywhere";
+        function = "__np_expand";
       };
     };
   };
