@@ -32,6 +32,8 @@ in {
       package = pkgs.niri; # TODO: Use input niri pkgs/overlay!
     };
 
+    programs.hyprland.enable = true;
+
     services = {
       xserver = {
         enable = true;
@@ -62,11 +64,15 @@ in {
     xdg.portal = {
       enable = true;
       # xdgOpenUsePortal = true;
-      config.common.default = "gtk";
+      config = {
+        common.default = "gtk";
+        hyprland.default = ["hyprland" "gtk"];
+      };
 
       extraPortals = with pkgs; [
         xdg-desktop-portal-gnome
         xdg-desktop-portal-gtk
+        xdg-desktop-portal-hyprland
       ];
     };
 
