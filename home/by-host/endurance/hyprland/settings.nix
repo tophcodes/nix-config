@@ -46,7 +46,7 @@
         enabled = true;
         size = 4;
         passes = 2;
-        noise = 0.3;
+        noise = 0.05;
       };
       shadow = {
         enabled = true;
@@ -69,6 +69,16 @@
 
     # Single tiled window on main monitor: give it breathing room
     workspace = [
+      # Pin workspaces to monitors
+      "1, monitor:HDMI-A-1, default:true"
+      "2, monitor:HDMI-A-1"
+      "3, monitor:HDMI-A-1"
+      "4, monitor:HDMI-A-1"
+      "5, monitor:HDMI-A-1"
+      "6, monitor:DP-3, default:true"
+      "7, monitor:DP-3"
+      "8, monitor:DP-3"
+      # Single tiled window on main monitor: give it breathing room
       "w[t1] m[HDMI-A-1], gapsout:15 840 15 840"
     ];
 
