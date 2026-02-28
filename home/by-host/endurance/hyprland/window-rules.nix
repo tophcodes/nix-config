@@ -1,6 +1,9 @@
 {...}: {
   wayland.windowManager.hyprland.settings = {
     windowrulev2 = [
+      # Prevent garbage frame flash before first render
+      "immediate, class:.*"
+
       # Privacy: block from screen capture
       "noscreenshare, class:^(1password)$"
       "noscreenshare, class:^(thunderbird)$"
@@ -21,8 +24,9 @@
       # Kitty: slight transparency
       "opacity 0.97 0.97, class:^(kitty)$"
 
-      # JetBrains: suppress phantom windows
-      "nofocus, class:^jetbrains-(?!toolbox), floating:1, title:^win\\d+$"
+      # JetBrains: suppress phantom windows (RE2 doesn't support lookaheads,
+      # so we can't exclude toolbox here — apply per-IDE if needed)
+      # "nofocus, class:^(jetbrains-idea|jetbrains-rider|jetbrains-clion)$, floating:1, title:^win\\d+$"
     ];
   };
 }
