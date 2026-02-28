@@ -9,6 +9,7 @@
       "$mod, e, exec, nautilus"
       "$mod, d, exec, zeal"
       "$mod, g, exec, ${pkgs.harbor.hg-picker}/bin/hg-picker"
+      "$mod, v, exec, cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"
 
       # Window management
       "$mod, q, killactive"
