@@ -36,6 +36,9 @@
       "$mod, 3, workspace, 3"
       "$mod, 4, workspace, 4"
       "$mod, 5, workspace, 5"
+      "$mod, 6, workspace, 6"
+      "$mod, 7, workspace, 7"
+      "$mod, 8, workspace, 8"
 
       # Move to workspace silently
       "$mod CTRL, 1, movetoworkspacesilent, 1"
@@ -43,6 +46,9 @@
       "$mod CTRL, 3, movetoworkspacesilent, 3"
       "$mod CTRL, 4, movetoworkspacesilent, 4"
       "$mod CTRL, 5, movetoworkspacesilent, 5"
+      "$mod CTRL, 6, movetoworkspacesilent, 6"
+      "$mod CTRL, 7, movetoworkspacesilent, 7"
+      "$mod CTRL, 8, movetoworkspacesilent, 8"
     ];
 
     bindm = [
