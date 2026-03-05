@@ -6,6 +6,7 @@
   home.packages = with pkgs; [
     # Shell software
     fzf # Fuzzy finding
+    fd # Fast find alternative
     bat # cat alternative
     yazi # Terminal file manager
     zellij # terminal workspace

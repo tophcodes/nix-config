@@ -6,10 +6,13 @@
       # Apps
       "$mod, space, exec, fuzzel"
       "$mod, c, exec, ${pkgs.harbor.spawn-term}/bin/spawn-term"
-      "$mod, e, exec, nautilus"
+      "$mod, e, exec, ${pkgs.harbor.spawn-term}/bin/spawn-term yazi"
       "$mod, d, exec, zeal"
       "$mod, g, exec, ${pkgs.harbor.hg-picker}/bin/hg-picker"
       "$mod, v, exec, cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"
+      "$mod, b, exec, firefox"
+      "$mod SHIFT, c, exec, ${pkgs.harbor.spawn-term}/bin/spawn-term claude"
+      "$mod SHIFT, e, exec, ${pkgs.harbor.spawn-term}/bin/spawn-term hx"
 
       # Window management
       "$mod, q, killactive"
@@ -49,6 +52,27 @@
       "$mod CTRL, 6, movetoworkspacesilent, 6"
       "$mod CTRL, 7, movetoworkspacesilent, 7"
       "$mod CTRL, 8, movetoworkspacesilent, 8"
+
+      # Cycle through workspaces with keyboard
+      "$mod, bracketright, workspace, e+1"
+      "$mod, bracketleft, workspace, e-1"
+
+      # Tab through windows
+      "$mod, tab, cyclenext"
+      "$mod SHIFT, tab, cyclenext, prev"
+
+      # Resize windows with keyboard
+      "$mod, equal, resizeactive, 50 0"
+      "$mod, minus, resizeactive, -50 0"
+      "$mod SHIFT, equal, resizeactive, 0 50"
+      "$mod SHIFT, minus, resizeactive, 0 -50"
+
+      # Special workspace (scratchpad)
+      "$mod, s, togglespecialworkspace, magic"
+      "$mod SHIFT, s, movetoworkspace, special:magic"
+
+      # Center floating window
+      "$mod, o, centerwindow"
     ];
 
     bindm = [

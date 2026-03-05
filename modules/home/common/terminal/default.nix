@@ -8,6 +8,7 @@ in {
     ./shell/prompt.nix
     ./shell/fish.nix
     ./shell/nu.nix
+    ./shell/tips.nix
   ];
 
   # add environment variables
