@@ -23,6 +23,10 @@ in {
         window_padding_width = "3 3";
         paste_actions = "no-op";
         # font_family = "Monaspace Neon NF";
+
+        # Transparency (opacity controlled by Stylix)
+        background_blur = "32";
+        dynamic_background_opacity = true;
       };
 
       actionAliases = {

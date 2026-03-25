@@ -88,46 +88,40 @@ in {
 
     preferAbbrs = true;
     shellAbbrs = {
-      "elm" = {
-        expansion = "elements";
-        tip = "Quick access to elements justfile";
-      };
+      "elm" = "elements";
 
       # Git related
-      "ga" = {expansion = "git add"; tip = "Stage files";};
-      "gaa" = {expansion = "git add --all"; tip = "Stage all changes";};
-      "gap" = {expansion = "git add --patch"; tip = "Interactively stage hunks";};
-      "gb" = {expansion = "git branch"; tip = "List/manage branches";};
-      "gst" = {expansion = "git status"; tip = "Show working tree status";};
-      "gbl" = {expansion = "git blame"; tip = "Show who changed each line";};
-      "grs" = {expansion = "git restore --staged"; tip = "Unstage files";};
-      "gcm" = {expansion = "git commit -m \"%\""; tip = "Commit with message";};
-      "gca" = {expansion = "git commit --amend"; tip = "Amend last commit";};
-      "gcan" = {expansion = "git commit --amend --no-edit"; tip = "Amend without editing message";};
-      "gco" = {expansion = "git checkout"; tip = "Switch branches (old style)";};
-      "gcob" = {expansion = "git checkout -b"; tip = "Create and switch branch";};
-      "gd" = {expansion = "git diff"; tip = "Show unstaged changes";};
-      "gds" = {expansion = "git diff --staged"; tip = "Show staged changes";};
-      "gl" = {expansion = "git log --oneline --graph"; tip = "Pretty git history";};
-      "gp" = {expansion = "git push"; tip = "Push to remote";};
-      "gpf" = {expansion = "git push --force-with-lease"; tip = "Safe force push";};
-      "gpl" = {expansion = "git pull"; tip = "Pull from remote";};
-      "gsw" = {expansion = "git switch"; tip = "Switch branches (new style)";};
-      "gswc" = {expansion = "git switch -c"; tip = "Create and switch branch (new style)";};
+      "ga" = "git add";
+      "gaa" = "git add --all";
+      "gap" = "git add --patch";
+      "gb" = "git branch";
+      "gst" = "git status";
+      "gbl" = "git blame";
+      "grs" = "git restore --staged";
+      "gcm" = "git commit -m \"%\"";
+      "gca" = "git commit --amend";
+      "gcan" = "git commit --amend --no-edit";
+      "gco" = "git checkout";
+      "gcob" = "git checkout -b";
+      "gd" = "git diff";
+      "gds" = "git diff --staged";
+      "gl" = "git log --oneline --graph";
+      "gp" = "git push";
+      "gpf" = "git push --force-with-lease";
+      "gpl" = "git pull";
+      "gsw" = "git switch";
+      "gswc" = "git switch -c";
 
       # System
-      "iso-date" = {expansion = "date -u +\"%Y-%m-%dT%H:%M:%SZ\""; tip = "Get ISO 8601 timestamp";};
-      "jf" = {expansion = "sudo journalctl -f -u"; tip = "Follow systemd journal";};
-      "sys stat" = {expansion = "systemctl status"; tip = "Check service status";};
-      "sys up" = {expansion = "systemctl start"; tip = "Start service";};
-      "sys down" = {expansion = "systemctl stop"; tip = "Stop service";};
-      "sys re" = {expansion = "systemctl restart"; tip = "Restart service";};
+      "iso-date" = "date -u +\"%Y-%m-%dT%H:%M:%SZ\"";
+      "jf" = "sudo journalctl -f -u";
+      "sys stat" = "systemctl status";
+      "sys up" = "systemctl start";
+      "sys down" = "systemctl stop";
+      "sys re" = "systemctl restart";
 
       # Quick navigation
-      "infra" = {expansion = "cd /srv/infra"; tip = "Jump to infrastructure config";};
-      "dots" = {expansion = "cd /srv/dotfiles"; tip = "Jump to dotfiles";};
-      "code" = {expansion = "cd ~/code"; tip = "Jump to code directory";};
-      "docs" = {expansion = "cd ~/documents"; tip = "Jump to documents";};
+      "docs" = "cd ~/documents";
 
       # Positional expansions
       "-C" = {

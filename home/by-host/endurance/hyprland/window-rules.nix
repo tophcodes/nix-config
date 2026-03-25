@@ -15,14 +15,17 @@
       "size 50% 80%, class:^(org\\.zealdocs\\.zeal)$"
       "minsize 1400 500, class:^(org\\.zealdocs\\.zeal)$"
 
-      "float, class:^(speedcrunch)$"
-      "center 1, class:^(speedcrunch)$"
-      "size 30% 60%, class:^(speedcrunch)$"
+      "float, class:^(qalculate-gtk)$"
+      "center 1, class:^(qalculate-gtk)$"
+      "size 30% 60%, class:^(qalculate-gtk)$"
 
       "float, title:^(DevTools)$"
 
       # Kitty: slight transparency
       "opacity 0.97 0.97, class:^(kitty)$"
+
+      # Only show hyprbars on kitty windows
+      "plugin:hyprbars:nobar, class:negative:^(kitty)$"
 
       # JetBrains: suppress phantom windows (RE2 doesn't support lookaheads,
       # so we can't exclude toolbox here — apply per-IDE if needed)

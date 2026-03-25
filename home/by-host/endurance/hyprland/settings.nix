@@ -91,5 +91,28 @@
       disable_hyprland_logo = true;
       disable_splash_rendering = true;
     };
+
+    plugin = {
+      hyprbars = {
+        bar_height = 28;
+        bar_text_size = 11;
+        bar_text_font = "sans-serif";
+
+        # Button layout (left to right)
+        bar_buttons_alignment = "right";
+        bar_button_padding = 8;
+        bar_padding = 10;
+
+        # Buttons
+        # hyprbars-button = [
+        #   # Close button (red)
+        #   "rgb(ff5555), 12, , hyprctl dispatch killactive"
+        #   # Maximize button (green)
+        #   "rgb(50fa7b), 12, , hyprctl dispatch fullscreen 1"
+        #   # Minimize button (yellow)
+        #   "rgb(f1fa8c), 12, , hyprctl dispatch movetoworkspacesilent special"
+        # ];
+      };
+    };
   };
 }

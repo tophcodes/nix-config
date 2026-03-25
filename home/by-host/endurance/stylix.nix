@@ -19,18 +19,21 @@
     # rose-pine-dawn
     # rose-pine-moon
     # ayu-mirage
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine-dawn.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine-moon.yaml";
 
     targets = {
       gtk.enable = false;
       qt.enable = false;
       firefox.profileNames = ["default" "work" "streaming"];
+      kitty.variant256Colors = true;
     };
+
+    opacity.terminal = 0.85;
 
     cursor = {
       package = pkgs.rose-pine-cursor;
       # name = "Rosé Pine Dawn";
-      name = "BreezeX-RosePineDawn-Linux";
+      name = "BreezeX-RosePine-Linux";
       size = 32;
     };
   };
