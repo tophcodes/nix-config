@@ -7,6 +7,5 @@
     pcalc = "numbat --pretty-print always -e";
     vim = "hx";
     vi = "hx";
-    trash = "trash-put";
   };
 }

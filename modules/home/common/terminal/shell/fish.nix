@@ -20,6 +20,22 @@ in {
     '';
 
     functions = {
+      fish_title = {
+        description = "Window title with SSH host context";
+        body = ''
+          set -l prefix ""
+          if set -q SSH_CONNECTION
+            set prefix (prompt_hostname)": "
+          end
+
+          set -l cmd (status current-command)
+          if test "$cmd" = fish
+            echo "$prefix"(prompt_pwd)
+          else
+            echo "$prefix$cmd"
+          end
+        '';
+      };
       __np_expand = {
         description = "Expands --np contextually: --pp for bat/cat, --no-pager otherwise";
         body = ''

@@ -1,10 +1,10 @@
 {pkgs, ...}: {
   wayland.windowManager.hyprland.settings = {
     monitor = [
-      # Main ultrawide (left)
-      "HDMI-A-1,3840x1080,0x0,1"
-      # Vertical display (right)
-      "DP-3,1920x1080,3840x-430,1,transform,1"
+      # Main display (right)
+      "HDMI-A-1,3840x2160,0x0,1"
+      # Vertical display (left)
+      "DP-3,1920x1080,-1080x-50,1,transform,3"
       # Fallback for any other monitor
       ",preferred,auto,1"
     ];
@@ -67,7 +67,6 @@
       ];
     };
 
-    # Single tiled window on main monitor: give it breathing room
     workspace = [
       # Pin workspaces to monitors
       "1, monitor:HDMI-A-1, default:true"
@@ -79,7 +78,7 @@
       "7, monitor:DP-3"
       "8, monitor:DP-3"
       # Single tiled window on main monitor: give it breathing room
-      "w[t1] m[HDMI-A-1], gapsout:15 840 15 840"
+      # "w[t1] m[HDMI-A-1], gapsout:15 840 15 840"
     ];
 
     dwindle = {
