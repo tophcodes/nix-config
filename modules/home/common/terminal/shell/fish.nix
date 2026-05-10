@@ -73,6 +73,12 @@ in {
           gh pr list | fzf | awk '{print $1}' | xargs -I {} gh pr checkout {}
         '';
       };
+      nt = {
+        description = "nix run ~/code/tools#<tool> [args]";
+        body = ''
+          nix run ~/code/tools#$argv[1] -- $argv[2..]
+        '';
+      };
       shortcuts = {
         description = "Show all aliases, abbreviations, and functions";
         body = ''

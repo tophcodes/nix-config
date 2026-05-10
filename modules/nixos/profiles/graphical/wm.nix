@@ -44,7 +44,7 @@ in {
       };
 
       displayManager = {
-        defaultSession = "niri";
+        defaultSession = "hyprland";
 
         sddm = let
           theme = "sddm-astronaut-theme";
