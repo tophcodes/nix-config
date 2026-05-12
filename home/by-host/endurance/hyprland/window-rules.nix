@@ -1,4 +1,4 @@
-{...}: {
+_: {
   wayland.windowManager.hyprland.settings = {
     windowrulev2 = [
       # Prevent garbage frame flash before first render
@@ -20,6 +20,12 @@
       "size 30% 60%, class:^(qalculate-gtk)$"
 
       "float, title:^(DevTools)$"
+
+      # Messaging apps -> left vertical monitor (DP-3, workspace 6)
+      "workspace 6 silent, class:^([Ss]lack)$"
+      "workspace 6 silent, class:^(vesktop)$"
+      "workspace 6 silent, class:^([Ss]ignal)$"
+      "workspace 6 silent, class:^([Ww]asistlos)$"
 
       # Kitty: slight transparency
       "opacity 0.97 0.97, class:^(kitty)$"
