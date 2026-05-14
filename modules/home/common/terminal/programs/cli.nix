@@ -30,6 +30,7 @@
   programs = {
     yazi = {
       enable = true;
+      shellWrapperName = "yy";
       keymap.mgr.prepend_keymap = [
         {
           on = ["c" "g"];

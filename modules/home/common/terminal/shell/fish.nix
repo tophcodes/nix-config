@@ -1,6 +1,5 @@
 {
   lib,
-  pkgs,
   config,
   ...
 }: let
@@ -13,7 +12,7 @@ in {
   programs.fish = {
     enable = true;
 
-    shellAliases = config.home.shellAliases;
+    inherit (config.home) shellAliases;
     shellInit = ''
       # Set global environment variables.
       ${env}
@@ -153,6 +152,11 @@ in {
       "--np" = {
         position = "anywhere";
         function = "__np_expand";
+      };
+      "--danger" = {
+        position = "anywhere";
+        command = "claude";
+        expansion = "--dangerously-skip-permissions";
       };
     };
   };
