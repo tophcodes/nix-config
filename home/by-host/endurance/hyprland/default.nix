@@ -3,6 +3,7 @@
     ./settings.nix
     ./keybinds.nix
     ./window-rules.nix
+    ./wallpaper.nix
   ];
 
   wayland.windowManager.hyprland = {

@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+_: {
   wayland.windowManager.hyprland.settings = {
     monitor = [
       # Main display (right)
@@ -15,6 +15,8 @@
       "wl-paste --type image --watch cliphist store"
       # Automount USB drives
       "udiskie"
+      # Shell
+      "noctalia-shell"
     ];
 
     env = [
@@ -34,8 +36,8 @@
     };
 
     general = {
-      gaps_in = 8;
-      gaps_out = 15;
+      gaps_in = 12;
+      gaps_out = 20;
       border_size = 2;
       layout = "dwindle";
     };

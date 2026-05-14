@@ -19,7 +19,7 @@
     # rose-pine-dawn
     # rose-pine-moon
     # ayu-mirage
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine-moon.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/everforest-dark-hard.yaml";
 
     targets = {
       gtk.enable = false;
@@ -28,7 +28,7 @@
       kitty.variant256Colors = true;
     };
 
-    opacity.terminal = 0.85;
+    opacity.terminal = 0.92;
 
     cursor = {
       package = pkgs.rose-pine-cursor;
