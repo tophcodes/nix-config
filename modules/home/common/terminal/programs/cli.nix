@@ -69,5 +69,20 @@
       enableNushellIntegration = config.programs.nushell.enable;
       enableFishIntegration = config.programs.fish.enable;
     };
+
+    dircolors = {
+      # Override coreutils' built-in `ow`/`tw` defaults (blue/black on bright
+      # green), which collide with everforest's green palette on symlink
+      # targets pointing to world-writable dirs.
+      enable = true;
+      enableFishIntegration = config.programs.fish.enable;
+      enableNushellIntegration = config.programs.nushell.enable;
+      enableBashIntegration = true;
+      settings = {
+        # Bold white on everforest bg_green (#425047).
+        OTHER_WRITABLE = "01;37;48;2;66;80;71";
+        STICKY_OTHER_WRITABLE = "01;37;48;2;66;80;71";
+      };
+    };
   };
 }
