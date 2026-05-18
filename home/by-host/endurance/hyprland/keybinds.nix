@@ -4,12 +4,12 @@
 
     bind = [
       # Apps
-      "$mod, space, exec, noctalia-shell ipc call launcher toggle"
+      "$mod, space, exec, vicinae toggle"
       "$mod, c, exec, ${pkgs.harbor.spawn-term}/bin/spawn-term"
       "$mod, e, exec, ${pkgs.harbor.spawn-term}/bin/spawn-term yazi"
       "$mod, d, exec, zeal"
       "$mod, g, exec, ${pkgs.harbor.hg-picker}/bin/hg-picker"
-      "$mod, v, exec, noctalia-shell ipc call launcher clipboard"
+      "$mod, v, exec, vicinae vicinae://launch/clipboard/history"
       "$mod, b, exec, firefox"
       "$mod SHIFT, c, exec, ${pkgs.harbor.spawn-term}/bin/spawn-term claude"
       "$mod SHIFT, e, exec, ${pkgs.harbor.spawn-term}/bin/spawn-term hx"

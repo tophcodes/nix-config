@@ -88,6 +88,14 @@ _: {
       preserve_split = true;
     };
 
+    layerrule = [
+      # Vicinae launcher (wlr-layer-shell). Match upstream's recommended
+      # quickstart rules: blur the launcher, skip slide-in animation.
+      "blur, vicinae"
+      "ignorealpha 0, vicinae"
+      "noanim, vicinae"
+    ];
+
     misc = {
       disable_hyprland_logo = true;
       disable_splash_rendering = true;
