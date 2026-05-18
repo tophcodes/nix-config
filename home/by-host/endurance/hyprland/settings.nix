@@ -94,6 +94,7 @@ _: {
       "blur, vicinae"
       "ignorealpha 0, vicinae"
       "noanim, vicinae"
+      "dimaround, vicinae"
     ];
 
     misc = {

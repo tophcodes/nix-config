@@ -12,12 +12,18 @@ _: {
       # Floating windows
       "float, class:^(org\\.zealdocs\\.zeal)$"
       "center 1, class:^(org\\.zealdocs\\.zeal)$"
-      "size 50% 80%, class:^(org\\.zealdocs\\.zeal)$"
+      "size 43% 54%, class:^(org\\.zealdocs\\.zeal)$"
       "minsize 1400 500, class:^(org\\.zealdocs\\.zeal)$"
+      "opacity 0.93 0.90, class:^(org\\.zealdocs\\.zeal)$"
+      "rounding 12, class:^(org\\.zealdocs\\.zeal)$"
+      "dimaround, class:^(org\\.zealdocs\\.zeal)$"
 
       "float, class:^(qalculate-gtk)$"
       "center 1, class:^(qalculate-gtk)$"
       "size 30% 60%, class:^(qalculate-gtk)$"
+      "opacity 0.93 0.90, class:^(qalculate-gtk)$"
+      "rounding 12, class:^(qalculate-gtk)$"
+      "dimaround, class:^(qalculate-gtk)$"
 
       "float, title:^(DevTools)$"
 
