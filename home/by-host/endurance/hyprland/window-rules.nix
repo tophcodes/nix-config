@@ -20,6 +20,7 @@ _: {
 
       "float, class:^(be\\.alexandervanhee\\.gradia)$"
       "center 1, class:^(be\\.alexandervanhee\\.gradia)$"
+      "size 58% 58%, class:^(be\\.alexandervanhee\\.gradia)$"
 
       "float, class:^(qalculate-gtk)$"
       "center 1, class:^(qalculate-gtk)$"
