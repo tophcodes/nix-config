@@ -78,6 +78,28 @@ in {
           nix run ~/code/tools#$argv[1] -- $argv[2..]
         '';
       };
+      screenshot = {
+        description = "Take a screenshot: region (default) or full screen, then open in gradia";
+        body = ''
+          switch $argv[1]
+            case full
+              grim - | gradia
+            case '*'
+              grim -g (slurp) - | gradia
+          end
+        '';
+      };
+      record = {
+        description = "Screen recording: 'record' starts, 'record stop' stops";
+        body = ''
+          switch $argv[1]
+            case stop
+              noctalia-shell ipc call plugin:screen-shot-and-record stoprecord
+            case '*'
+              noctalia-shell ipc call plugin:screen-shot-and-record record
+          end
+        '';
+      };
       shortcuts = {
         description = "Show all aliases, abbreviations, and functions";
         body = ''
