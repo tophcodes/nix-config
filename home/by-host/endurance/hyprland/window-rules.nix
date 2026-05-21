@@ -18,6 +18,9 @@ _: {
       "rounding 12, class:^(org\\.zealdocs\\.zeal)$"
       "dimaround, class:^(org\\.zealdocs\\.zeal)$"
 
+      "float, class:^(be\\.alexandervanhee\\.gradia)$"
+      "center 1, class:^(be\\.alexandervanhee\\.gradia)$"
+
       "float, class:^(qalculate-gtk)$"
       "center 1, class:^(qalculate-gtk)$"
       "size 30% 60%, class:^(qalculate-gtk)$"

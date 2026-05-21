@@ -82,10 +82,20 @@ in {
         description = "Take a screenshot: region (default) or full screen, then open in gradia";
         body = ''
           switch $argv[1]
+            case --help -h
+              echo "usage: screenshot [full] [-h|--help]"
+              echo ""
+              echo "  (no args)  select region → gradia"
+              echo "  full       full screen → gradia"
             case full
               grim - | gradia
             case '*'
-              grim -g (slurp) - | gradia
+              set -l region (slurp)
+              if test $status -ne 0
+                echo "selection cancelled" >&2
+                return 1
+              end
+              grim -g $region - | gradia
           end
         '';
       };
@@ -93,6 +103,11 @@ in {
         description = "Screen recording: 'record' starts, 'record stop' stops";
         body = ''
           switch $argv[1]
+            case --help -h
+              echo "usage: record [stop] [-h|--help]"
+              echo ""
+              echo "  (no args)  start recording"
+              echo "  stop       stop recording"
             case stop
               noctalia-shell ipc call plugin:screen-shot-and-record stoprecord
             case '*'
