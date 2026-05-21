@@ -83,12 +83,20 @@ in {
         body = ''
           switch $argv[1]
             case --help -h
-              echo "usage: screenshot [full] [-h|--help]"
+              echo "usage: screenshot [full|window] [-h|--help]"
               echo ""
               echo "  (no args)  select region → gradia"
               echo "  full       full screen → gradia"
+              echo "  window     click a window → gradia"
             case full
               grim - | gradia
+            case window
+              set -l region (hyprctl clients -j | jq -r '.[] | "\(.at[0]),\(.at[1]) \(.size[0])x\(.size[1])"' | slurp)
+              if test $status -ne 0
+                echo "selection cancelled" >&2
+                return 1
+              end
+              grim -g $region - | gradia
             case '*'
               set -l region (slurp)
               if test $status -ne 0
