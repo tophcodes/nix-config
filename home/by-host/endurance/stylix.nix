@@ -23,7 +23,7 @@
 
     targets = {
       gtk.enable = false;
-      qt.enable = false;
+      qt.enable = true;
       firefox.profileNames = ["default" "work" "streaming"];
       kitty.variant256Colors = true;
     };

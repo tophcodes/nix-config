@@ -40,6 +40,10 @@ _: {
       # Kitty: slight transparency
       "opacity 0.97 0.97, class:^(kitty)$"
 
+      # Fullscreen (mode 1 / maximize): thicker red border
+      "bordersize 6, fullscreen:1"
+      "bordercolor rgb(e67e80), fullscreen:1"
+
       # Only show hyprbars on kitty windows
       "plugin:hyprbars:nobar, class:negative:^(kitty)$"
 
