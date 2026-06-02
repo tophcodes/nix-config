@@ -1,5 +1,4 @@
 {
-  lib,
   pkgs,
   config,
   ...
@@ -7,13 +6,12 @@
   programs.nushell = {
     enable = true;
 
-    shellAliases = config.home.shellAliases;
+    inherit (config.home) shellAliases;
     environmentVariables = config.home.sessionVariables;
 
     plugins = with pkgs; [
       nushellPlugins.query
       nushellPlugins.gstat
-      nushellPlugins.skim
     ];
 
     extraConfig = ''
