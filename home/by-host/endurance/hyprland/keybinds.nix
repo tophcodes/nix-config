@@ -19,7 +19,7 @@
       "$mod, f, fullscreen, 1"
       "$mod, t, togglefloating"
       "$mod, p, pseudo"
-      "$mod SHIFT, j, togglesplit"
+      "$mod SHIFT, j, layoutmsg, togglesplit"
 
       # Focus (vim-style, matching niri keybinds)
       "$mod, h, movefocus, l"

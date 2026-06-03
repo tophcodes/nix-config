@@ -84,17 +84,19 @@ _: {
     ];
 
     dwindle = {
-      pseudotile = true;
+      # `pseudotile` option removed in Hyprland 0.55; the `pseudo` dispatcher
+      # (bound in keybinds.nix) toggles it per-window instead.
       preserve_split = true;
     };
 
     layerrule = [
       # Vicinae launcher (wlr-layer-shell). Match upstream's recommended
       # quickstart rules: blur the launcher, skip slide-in animation.
-      "blur, vicinae"
-      "ignorealpha 0, vicinae"
-      "noanim, vicinae"
-      "dimaround, vicinae"
+      # Hyprland 0.55 layerrule v3: boolean rules take on/off, matcher is match:.
+      "blur on, match:namespace vicinae"
+      "ignore_alpha 0, match:namespace vicinae"
+      "no_anim on, match:namespace vicinae"
+      "dim_around on, match:namespace vicinae"
     ];
 
     misc = {
