@@ -78,6 +78,16 @@ in {
           nix run ~/code/tools#$argv[1] -- $argv[2..]
         '';
       };
+      ",man" = {
+        description = "man page for a nixpkgs tool (comma-style, on demand)";
+        body = ''
+          if test -z "$argv[1]"
+            echo "usage: ,man <tool> [man args]" >&2
+            return 1
+          end
+          nix shell "nixpkgs#$argv[1]" --command man $argv[2..] $argv[1]
+        '';
+      };
       screenshot = {
         description = "Take a screenshot: region (default) or full screen, then open in gradia";
         body = ''
