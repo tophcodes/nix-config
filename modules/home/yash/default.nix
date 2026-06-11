@@ -2,34 +2,42 @@
 # kept in sync via yazi's DDS (ya emit-to).
 #
 #   shell → yazi: automatic, per-shell PWD hook emits a cd to the yazi pane
-#   yazi → shell: <C-s> in yazi types a cd into the shell pane
+#   yazi → shell: <C-s> calls yash-cd which targets the shell pane by stored ID
+#   Alt+y: cycles yazi pane through hidden → dir (25%) → multi (45%) → full (zoom)
 #
-# Sync hooks are installed for every enabled shell. `yash [shell-cmd]`
-# spawns a specific shell in the right pane (default: login shell).
+# Sync hooks are installed for every enabled shell.
 {
   pkgs,
   config,
   lib,
   ...
-}: {
+}: let
+  mkYashPkg = name: script: extraInputs:
+    pkgs.writeShellApplication {
+      inherit name;
+      runtimeInputs = [pkgs.tmux] ++ extraInputs;
+      text = builtins.readFile script;
+    };
+in {
   config = lib.mkMerge [
     {
       home.packages = [
-        (pkgs.writeShellApplication {
-          name = "yash";
-          runtimeInputs = [pkgs.tmux];
-          text = builtins.readFile ./scripts/yash.sh;
-        })
+        (mkYashPkg "yash" ./scripts/yash.sh [] // {runtimeEnv.YASH_TMUX_CONF = ./scripts/yash.tmux.conf;})
+        (mkYashPkg "yash-toggle" ./scripts/yash-toggle.sh [])
+        (mkYashPkg "yash-cd" ./scripts/yash-cd.sh [])
       ];
 
-      # Leading space keeps the typed cd out of shell history.
-      programs.yazi.keymap.mgr.prepend_keymap = [
-        {
-          on = "<C-s>";
-          run = ''shell 'tmux send-keys -t yash.1 " cd \"$PWD\"" Enter' '';
-          desc = "Sync shell pane to yazi cwd";
-        }
-      ];
+      programs.yazi = {
+        settings.mgr.mouse_events = ["click" "scroll"];
+
+        keymap.mgr.prepend_keymap = [
+          {
+            on = "<C-s>";
+            run = ''shell 'yash-cd "$PWD"' '';
+            desc = "Sync shell pane to yazi cwd";
+          }
+        ];
+      };
     }
 
     (lib.mkIf config.programs.fish.enable {
@@ -40,7 +48,6 @@
     })
 
     (lib.mkIf config.programs.nushell.enable {
-      # mkAfter: must run after any wholesale `$env.config = {...}` assignment.
       programs.nushell.extraConfig = lib.mkAfter (builtins.readFile ./scripts/sync-pwd.nu);
     })
 
