@@ -12,19 +12,20 @@
   lib,
   ...
 }: let
-  mkYashPkg = name: script: extraInputs:
-    pkgs.writeShellApplication {
-      inherit name;
-      runtimeInputs = [pkgs.tmux] ++ extraInputs;
-      text = builtins.readFile script;
-    };
+  mkYashPkg = name: script: extraInputs: extraArgs:
+    pkgs.writeShellApplication ({
+        inherit name;
+        runtimeInputs = [pkgs.tmux] ++ extraInputs;
+        text = builtins.readFile script;
+      }
+      // extraArgs);
 in {
   config = lib.mkMerge [
     {
       home.packages = [
-        (mkYashPkg "yash" ./scripts/yash.sh [] // {runtimeEnv.YASH_TMUX_CONF = ./scripts/yash.tmux.conf;})
-        (mkYashPkg "yash-toggle" ./scripts/yash-toggle.sh [])
-        (mkYashPkg "yash-cd" ./scripts/yash-cd.sh [])
+        (mkYashPkg "yash" ./scripts/yash.sh [] {runtimeEnv.YASH_TMUX_CONF = ./scripts/yash.tmux.conf;})
+        (mkYashPkg "yash-toggle" ./scripts/yash-toggle.sh [] {})
+        (mkYashPkg "yash-cd" ./scripts/yash-cd.sh [] {})
       ];
 
       programs.yazi = {
