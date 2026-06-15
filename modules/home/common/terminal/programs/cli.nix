@@ -48,7 +48,7 @@
         }
         {
           on = "<C-n>";
-          run = "shell -- ${pkgs.ripdrag}/bin/ripdrag %s -x 2>/dev/null &";
+          run = "shell -- ${pkgs.ripdrag}/bin/ripdrag %s -a 2>/dev/null &";
           desc = "Drag and drop selected files";
         }
       ];
