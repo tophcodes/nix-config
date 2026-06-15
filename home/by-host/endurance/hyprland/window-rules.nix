@@ -34,6 +34,11 @@ _: {
 
       "float on, match:title ^(DevTools)$"
 
+      # Noctalia Settings
+      "float on, match:class ^(dev\\.noctalia\\.Noctalia\\.Settings)$"
+      "center 1, match:class ^(dev\\.noctalia\\.Noctalia\\.Settings)$"
+      "size 1744 1354, match:class ^(dev\\.noctalia\\.Noctalia\\.Settings)$"
+
       # Messaging apps -> left vertical monitor (DP-3, workspace 6)
       "workspace 6 silent, match:class ^([Ss]lack)$"
       "workspace 6 silent, match:class ^(vesktop)$"
