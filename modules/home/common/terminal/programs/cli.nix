@@ -46,6 +46,11 @@
           run = ''shell "$SHELL" --block'';
           desc = "Open $SHELL here";
         }
+        {
+          on = "<C-n>";
+          run = "shell -- ${pkgs.ripdrag}/bin/ripdrag %s -x 2>/dev/null &";
+          desc = "Drag and drop selected files";
+        }
       ];
     };
 
