@@ -127,9 +127,9 @@ in {
               echo "  (no args)  start recording"
               echo "  stop       stop recording"
             case stop
-              noctalia-shell ipc call plugin:screen-shot-and-record stoprecord
+              noctalia msg screen-recorder stop
             case '*'
-              noctalia-shell ipc call plugin:screen-shot-and-record record
+              noctalia msg screen-recorder start
           end
         '';
       };

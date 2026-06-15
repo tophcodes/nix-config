@@ -16,7 +16,7 @@ _: {
       # Automount USB drives
       "udiskie"
       # Shell
-      "noctalia-shell"
+      "noctalia"
     ];
 
     env = [
