@@ -44,12 +44,7 @@ _: {
 
     decoration = {
       rounding = 8;
-      blur = {
-        enabled = true;
-        size = 4;
-        passes = 2;
-        noise = 0.05;
-      };
+      blur.enabled = false;
       shadow = {
         enabled = true;
         range = 4;
