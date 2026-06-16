@@ -45,11 +45,7 @@ _: {
     decoration = {
       rounding = 8;
       blur.enabled = false;
-      shadow = {
-        enabled = true;
-        range = 4;
-        render_power = 3;
-      };
+      shadow.enabled = false;
     };
 
     animations = {
