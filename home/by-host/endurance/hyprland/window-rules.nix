@@ -52,8 +52,8 @@ _: {
       "border_size 6, match:fullscreen 1"
       "border_color rgb(e67e80), match:fullscreen 1"
 
-      # Only show hyprbars on kitty windows
-      "hyprbars:no_bar on, match:class negative:^(kitty)$"
+      # No title bars on any window
+      "hyprbars:no_bar on, match:class .*"
 
       # JetBrains: suppress phantom windows (RE2 doesn't support lookaheads,
       # so we can't exclude toolbox here — apply per-IDE if needed)
