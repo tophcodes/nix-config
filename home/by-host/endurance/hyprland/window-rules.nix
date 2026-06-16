@@ -7,6 +7,11 @@ _: {
       # Prevent garbage frame flash before first render
       "immediate on, match:class .*"
 
+      # 1Password: floating, centered, reasonable size
+      "float on, match:class ^(1password)$"
+      "center 1, match:class ^(1password)$"
+      "size 960 640, match:class ^(1password)$"
+
       # Privacy: block from screen capture
       "no_screen_share on, match:class ^(1password)$"
       "no_screen_share on, match:class ^(thunderbird)$"
