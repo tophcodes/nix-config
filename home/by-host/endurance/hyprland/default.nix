@@ -13,7 +13,7 @@
     # ships plugins — null prevents a second, divergent Hyprland in the profile.
     package = null;
     portalPackage = null;
-    plugins = with pkgs.hyprlandPlugins; [hyprspace hypr-darkwindow];
+    plugins = with pkgs.hyprlandPlugins; [hyprbars hyprspace hypr-darkwindow];
   };
 
   home.packages = with pkgs; [
