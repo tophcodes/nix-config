@@ -32,6 +32,7 @@ in {
               style = "plain";
               template = "{{ .UserName }}@{{ .HostName }} ";
               type = "session";
+              min_width = 100;
             }
             {
               foreground = "p:pink";
@@ -40,7 +41,7 @@ in {
               type = "path";
               properties = {
                 home_icon = "~";
-                style = "full";
+                style = "letter";
                 mapped_locations = {
                   "~/code/hausgold/env/projects" = "hg-env";
                   "~/code/hausgold" = "hg";
@@ -50,10 +51,17 @@ in {
               };
             }
             {
+              foreground = "p:os";
+              style = "plain";
+              template = ''{{ if .Env.IN_NIX_SHELL }}󱄅 {{ trimSuffix "-env" .Env.name }} {{ end }}'';
+              type = "text";
+            }
+            {
               foreground = "p:lavender";
-              template = "{{ .HEAD }} ";
+              template = "{{ .HEAD }}{{ if .Working.Changed }} *{{ end }}{{ if .Staging.Changed }} +{{ end }}{{ if gt .Ahead 0 }} {{ end }}{{ if gt .Behind 0 }} {{ end }} ";
               style = "plain";
               type = "git";
+              min_width = 80;
               properties = {
                 branch_icon = unicode "\\ue725 ";
                 cherry_pick_icon = unicode "\\ue29b ";
@@ -63,7 +71,7 @@ in {
                 rebase_icon = unicode "\\ue728 ";
                 revert_icon = unicode "\\uf0e2 ";
                 tag_icon = unicode "\\uf412 ";
-                fetch_status = false;
+                fetch_status = true;
                 fetch_upstream_icon = false;
               };
             }
@@ -101,7 +109,7 @@ in {
           segments = [
             {
               foreground = "p:closer";
-              template = "#";
+              template = "λ";
               style = "plain";
               type = "text";
             }
