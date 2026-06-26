@@ -17,6 +17,8 @@ _: {
       "udiskie"
       # Shell
       "noctalia"
+      # KDE Connect: starts kdeconnectd via dbus + tray indicator
+      "kdeconnect-indicator"
     ];
 
     env = [
