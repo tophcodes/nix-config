@@ -4,6 +4,7 @@
     ./keybinds.nix
     ./window-rules.nix
     ./wallpaper.nix
+    ./idle.nix
   ];
 
   wayland.windowManager.hyprland = {
