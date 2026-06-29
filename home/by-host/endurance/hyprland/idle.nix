@@ -6,22 +6,28 @@
   hyprctl = lib.getExe' pkgs.hyprland "hyprctl";
   loginctl = lib.getExe' pkgs.systemd "loginctl";
 
-  # Animated, *locked* screensaver. swaylock-plugin is a real ext-session-lock
-  # locker (PAM auth) that can render an arbitrary wlr-layer-shell client as its
-  # background. windowtolayer wraps an ordinary terminal app into such a layer
-  # surface, so cmatrix — sparse moving green on black, low average luminance +
-  # motion, i.e. OLED-cheap — runs *inside* the lock surface. A normal lock
-  # blanks all other windows (ext-session-lock), so the animation has to BE the
-  # lock background; this is the only way to get "animated AND locked" at once.
-  # One instance per output (--command-each). Requires the `swaylock` PAM service
-  # on the host (hosts/endurance/default.nix) or unlock can't authenticate.
+  # hyprlock is the native Hyprland ext-session-lock client (PAM auth against the
+  # `hyprlock` service, declared on the host). It has no animation redraw loop, so
+  # it can't repeat the swaylock-plugin 1.8.6 SEGV in output_redraw_timeout that
+  # killed the lock surface mid-session and wedged the compositor into the
+  # "your locker crashed, switch TTY" state. Background is solid OLED black —
+  # cheap on the panel, no live cmatrix. Single-instance guard so a second
+  # lock-session signal doesn't spawn a duplicate locker.
   locker = pkgs.writeShellScript "oled-lock" ''
-    ${pkgs.procps}/bin/pgrep -x swaylock-plugin >/dev/null && exit 0
-    exec ${pkgs.swaylock-plugin}/bin/swaylock-plugin \
-      --command-each '${lib.getExe pkgs.windowtolayer} -- ${lib.getExe pkgs.kitty} -o background=#000000 -o background_opacity=1.0 -o font_size=16 -e ${lib.getExe pkgs.cmatrix} -abu 5'
+    ${pkgs.procps}/bin/pgrep -x hyprlock >/dev/null && exit 0
+    exec ${lib.getExe pkgs.hyprlock}
   '';
 in {
-  home.packages = with pkgs; [swaylock-plugin windowtolayer cmatrix];
+  # Colors (background + input-field) come from Stylix's hyprlock target (base16
+  # palette, near-black base00 — OLED-cheap). Only the non-themed behaviour knobs
+  # live here.
+  programs.hyprlock = {
+    enable = true;
+    settings.general = {
+      disable_loading_bar = true;
+      hide_cursor = true;
+    };
+  };
 
   services.hypridle = {
     enable = true;
@@ -37,7 +43,7 @@ in {
         ignore_systemd_inhibit = false;
       };
       listener = [
-        # 30 min: lock + animated screensaver (cmatrix lives inside the lock).
+        # 30 min: lock (hyprlock, solid black).
         {
           timeout = 1800;
           on-timeout = "${loginctl} lock-session";
