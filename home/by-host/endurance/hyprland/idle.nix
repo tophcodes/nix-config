@@ -13,8 +13,17 @@
   # "your locker crashed, switch TTY" state. Background is solid OLED black —
   # cheap on the panel, no live cmatrix. Single-instance guard so a second
   # lock-session signal doesn't spawn a duplicate locker.
+  #
+  # XKB_DEFAULT_*: hyprlock does NOT read Hyprland's `input:kb_layout`/`kb_variant`
+  # — it builds its xkb keymap from these env vars, falling back to plain `us`
+  # (no `intl` variant) if unset. The compositor here runs us+intl with dead keys
+  # ('"`~^), so without this the same keystrokes produce different bytes inside the
+  # locker → pam_unix rejects the password (FIDO still works, it doesn't type).
+  # Keep in sync with home/by-host/endurance/hyprland/settings.nix.
   locker = pkgs.writeShellScript "oled-lock" ''
     ${pkgs.procps}/bin/pgrep -x hyprlock >/dev/null && exit 0
+    export XKB_DEFAULT_LAYOUT=us
+    export XKB_DEFAULT_VARIANT=intl
     exec ${lib.getExe pkgs.hyprlock}
   '';
 in {
@@ -23,9 +32,27 @@ in {
   # live here.
   programs.hyprlock = {
     enable = true;
-    settings.general = {
-      disable_loading_bar = true;
-      hide_cursor = true;
+    settings = {
+      general.hide_cursor = true;
+      # Big clock + date above the (Stylix-themed, centered) input field so the
+      # lock screen isn't a bare rectangle. $TIME is a hyprlock builtin; the date
+      # shells out to coreutils (absolute path — the systemd user PATH is thin).
+      label = [
+        {
+          text = "$TIME";
+          font_size = 92;
+          position = "0, 220";
+          halign = "center";
+          valign = "center";
+        }
+        {
+          text = ''cmd[update:60000] ${pkgs.coreutils}/bin/date +"%A, %-d. %B"'';
+          font_size = 22;
+          position = "0, 130";
+          halign = "center";
+          valign = "center";
+        }
+      ];
     };
   };
 
