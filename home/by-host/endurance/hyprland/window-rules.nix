@@ -60,9 +60,18 @@ _: {
       # Firefox fullscreen on left monitor (DP-3, workspaces 6-8): fake it —
       # internal state stays 0 (window untouched, stays tiled/resizable),
       # client state 2 (Firefox thinks it's fullscreen, hides all chrome).
-      "fullscreen_state 0 2, match:class ^(firefox)$ match:workspace 6"
-      "fullscreen_state 0 2, match:class ^(firefox)$ match:workspace 7"
-      "fullscreen_state 0 2, match:class ^(firefox)$ match:workspace 8"
+      # class is `firefox.*` because each profile now launches with its own
+      # `--name firefox-<profile>` (see below).
+      "fullscreen_state 0 2, match:class ^(firefox.*)$ match:workspace 6"
+      "fullscreen_state 0 2, match:class ^(firefox.*)$ match:workspace 7"
+      "fullscreen_state 0 2, match:class ^(firefox.*)$ match:workspace 8"
+
+      # Firefox profiles -> dedicated workspaces. Each profile launches with
+      # `--name firefox-<profile>` (keybinds.nix, firefox-with-context,
+      # firefox-profiles desktop entries) so it gets its own class here.
+      "workspace 1 silent, match:class ^(firefox-default)$"
+      "workspace 2 silent, match:class ^(firefox-work)$"
+      "workspace 5 silent, match:class ^(firefox-prune)$"
 
       # JetBrains: suppress phantom windows (RE2 doesn't support lookaheads,
       # so we can't exclude toolbox here — apply per-IDE if needed)

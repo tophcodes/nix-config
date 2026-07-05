@@ -10,7 +10,7 @@
       "$mod, d, exec, zeal"
       "$mod, g, exec, ${pkgs.harbor.hg-picker}/bin/hg-picker"
       "$mod, v, exec, vicinae vicinae://launch/clipboard/history"
-      "$mod, b, exec, firefox"
+      "$mod, b, exec, firefox -P default --name firefox-default"
       "$mod SHIFT, c, exec, ${pkgs.harbor.spawn-term}/bin/spawn-term claude"
       "$mod SHIFT, e, exec, ${pkgs.harbor.spawn-term}/bin/spawn-term hx"
 
