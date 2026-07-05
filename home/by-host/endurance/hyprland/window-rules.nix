@@ -57,6 +57,13 @@ _: {
       "border_size 6, match:fullscreen 1"
       "border_color rgb(e67e80), match:fullscreen 1"
 
+      # Firefox fullscreen on left monitor (DP-3, workspaces 6-8): fake it —
+      # internal state stays 0 (window untouched, stays tiled/resizable),
+      # client state 2 (Firefox thinks it's fullscreen, hides all chrome).
+      "fullscreen_state 0 2, match:class ^(firefox)$ match:workspace 6"
+      "fullscreen_state 0 2, match:class ^(firefox)$ match:workspace 7"
+      "fullscreen_state 0 2, match:class ^(firefox)$ match:workspace 8"
+
       # JetBrains: suppress phantom windows (RE2 doesn't support lookaheads,
       # so we can't exclude toolbox here — apply per-IDE if needed)
       # "no_focus on, match:class ^(jetbrains-idea|jetbrains-rider|jetbrains-clion)$, match:floating 1, match:title ^win\\d+$"
