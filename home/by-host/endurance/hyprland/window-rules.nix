@@ -60,14 +60,16 @@ _: {
       # Firefox fullscreen on left monitor (DP-3, workspaces 6-8): fake it —
       # fullscreen_state is a static rule and doesn't react to the client's
       # live fullscreen request, so Hyprland still took over the whole
-      # monitor. suppressevent drops that request entirely (window stays
+      # monitor. suppress_event drops that request entirely (window stays
       # tiled); Firefox still hides its chrome since that's driven by its
-      # own fullscreen API, independent of the compositor's ack.
+      # own fullscreen API, independent of the compositor's ack. Field is
+      # `suppress_event` (snake_case v3 field) — `suppressevent` is the old
+      # windowrulev2 keyword and errors here with "invalid field type".
       # class is `firefox.*` because each profile now launches with its own
       # `--name firefox-<profile>` (see below).
-      "suppressevent fullscreen, match:class ^(firefox.*)$ match:workspace 6"
-      "suppressevent fullscreen, match:class ^(firefox.*)$ match:workspace 7"
-      "suppressevent fullscreen, match:class ^(firefox.*)$ match:workspace 8"
+      "suppress_event fullscreen, match:class ^(firefox.*)$ match:workspace 6"
+      "suppress_event fullscreen, match:class ^(firefox.*)$ match:workspace 7"
+      "suppress_event fullscreen, match:class ^(firefox.*)$ match:workspace 8"
 
       # Firefox profiles -> dedicated workspaces. Each profile launches with
       # `--name firefox-<profile>` (keybinds.nix, firefox-with-context,
