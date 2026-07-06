@@ -58,13 +58,16 @@ _: {
       "border_color rgb(e67e80), match:fullscreen 1"
 
       # Firefox fullscreen on left monitor (DP-3, workspaces 6-8): fake it —
-      # internal state stays 0 (window untouched, stays tiled/resizable),
-      # client state 2 (Firefox thinks it's fullscreen, hides all chrome).
+      # fullscreen_state is a static rule and doesn't react to the client's
+      # live fullscreen request, so Hyprland still took over the whole
+      # monitor. suppressevent drops that request entirely (window stays
+      # tiled); Firefox still hides its chrome since that's driven by its
+      # own fullscreen API, independent of the compositor's ack.
       # class is `firefox.*` because each profile now launches with its own
       # `--name firefox-<profile>` (see below).
-      "fullscreen_state 0 2, match:class ^(firefox.*)$ match:workspace 6"
-      "fullscreen_state 0 2, match:class ^(firefox.*)$ match:workspace 7"
-      "fullscreen_state 0 2, match:class ^(firefox.*)$ match:workspace 8"
+      "suppressevent fullscreen, match:class ^(firefox.*)$ match:workspace 6"
+      "suppressevent fullscreen, match:class ^(firefox.*)$ match:workspace 7"
+      "suppressevent fullscreen, match:class ^(firefox.*)$ match:workspace 8"
 
       # Firefox profiles -> dedicated workspaces. Each profile launches with
       # `--name firefox-<profile>` (keybinds.nix, firefox-with-context,
