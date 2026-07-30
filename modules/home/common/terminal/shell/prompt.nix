@@ -61,7 +61,7 @@ in {
               template = "{{ .HEAD }}{{ if .Working.Changed }} *{{ end }}{{ if .Staging.Changed }} +{{ end }}{{ if gt .Ahead 0 }} {{ end }}{{ if gt .Behind 0 }} {{ end }} ";
               style = "plain";
               type = "git";
-              min_width = 80;
+              min_width = 70;
               properties = {
                 branch_icon = unicode "\\ue725 ";
                 cherry_pick_icon = unicode "\\ue29b ";

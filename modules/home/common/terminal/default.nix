@@ -8,7 +8,12 @@ in {
     ./shell/prompt.nix
     ./shell/fish.nix
     ./shell/nu.nix
+    ./shell/zsh.nix
   ];
+
+  # ~/.local/bin was previously prepended by a hand-written ~/.zshrc; owning it
+  # here means every shell gets it, not just zsh.
+  home.sessionPath = ["$HOME/.local/bin"];
 
   # add environment variables
   home.sessionVariables = {
