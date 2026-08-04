@@ -40,5 +40,44 @@
   },
   "terminal": {
     "shell": { "program": "bash" }
+  },
+  // nil is off: both servers would report the same syntax diagnostics, and only
+  // nixd resolves option names by evaluating the flake.
+  "languages": {
+    "Nix": {
+      "language_servers": ["nixd", "!nil"]
+    }
+  },
+  "lsp": {
+    "nixd": {
+      // The Nix extension wraps this object under a "nixd" key before sending
+      // it as workspace configuration, so these are nixd's own settings.
+      //
+      // The flake is addressed as git+file with an absolute path, not path: or
+      // ./. — path: copies the whole ~800 MB worktree into the store on every
+      // edit, and a relative ./. resolves against nixd's working directory,
+      // which is wherever Zed was launched from. git+file sees only tracked
+      // files, honours an uncommitted worktree, and matches the ?submodules=1
+      // the Justfile uses for the local/* submodule inputs.
+      //
+      // Consequence: option completion always describes ~/infra, in every
+      // project, and names endurance/toph@endurance specifically.
+      "settings": {
+        "nixpkgs": {
+          "expr": "import (builtins.getFlake \"git+file:///home/toph/infra?submodules=1\").inputs.unstable {}"
+        },
+        "options": {
+          "nixos": {
+            "expr": "(builtins.getFlake \"git+file:///home/toph/infra?submodules=1\").nixosConfigurations.endurance.options"
+          },
+          "home-manager": {
+            "expr": "(builtins.getFlake \"git+file:///home/toph/infra?submodules=1\").homeConfigurations.\"toph@endurance\".options"
+          }
+        },
+        "formatting": {
+          "command": ["alejandra", "-q"]
+        }
+      }
+    }
   }
 }
