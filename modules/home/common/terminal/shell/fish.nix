@@ -14,6 +14,17 @@ in {
 
     inherit (config.home) shellAliases;
     shellInit = ''
+      # The nix installer only writes PATH hooks for /etc/bashrc and /etc/zshrc,
+      # never for fish. That went unnoticed while fish was only ever launched
+      # from a zsh login and inherited PATH — but as a *login* shell there is no
+      # parent to inherit from, so the nix profiles are missing and every
+      # integration below (atuin, zoxide, carapace) fails at startup.
+      # Upstream guards on __ETC_PROFILE_NIX_SOURCED, so this is a no-op on
+      # hosts where something else already set it up.
+      if test -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
+        source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
+      end
+
       # Set global environment variables.
       ${env}
     '';
