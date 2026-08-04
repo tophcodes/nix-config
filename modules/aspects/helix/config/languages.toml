@@ -1,0 +1,19 @@
+[[language]]
+auto-format = true
+name = "nix"
+
+[language.formatter]
+command = "alejandra"
+
+[[language]]
+auto-format = true
+language-servers = []
+name = "ruby"
+
+[language.formatter]
+args = ["compose", "exec", "-i", "puma", "bundle", "exec", "rubocop", "--autocorrect", "--stdin", "app.rb", "--stderr", "--format", "quiet"]
+command = "docker"
+
+[language-server.ruby-lsp]
+args = ["compose", "exec", "-i", "puma", "bundle", "exec", "ruby-lsp"]
+command = "docker"

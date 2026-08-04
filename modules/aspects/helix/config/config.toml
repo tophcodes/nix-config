@@ -1,0 +1,17 @@
+theme = "stylix"
+
+[editor]
+auto-format = true
+auto-save = true
+bufferline = "always"
+end-of-line-diagnostics = "hint"
+mouse = true
+rulers = [80]
+shell = ["nu", "-c"]
+
+[editor.file-picker]
+hidden = false
+
+[editor.whitespace.render]
+tabpad = "all"
+
