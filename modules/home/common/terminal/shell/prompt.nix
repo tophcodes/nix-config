@@ -56,6 +56,28 @@ in {
               template = ''{{ if .Env.IN_NIX_SHELL }}󱄅 {{ trimSuffix "-env" .Env.name }} {{ end }}'';
               type = "text";
             }
+            # In a colocated repo git HEAD is permanently detached: jj points it at
+            # the parent of the working-copy commit, because that commit is
+            # rewritten on every file change and no branch can follow it. The git
+            # segment would read "detached at <sha>" forever, so it stands down
+            # (`disable_with_jj` below) and this one answers instead — change id,
+            # nearest ancestor bookmark, and whether the working copy is dirty.
+            {
+              foreground = "p:lavender";
+              template = "{{ .ChangeID }}${unicode "{{ if .ClosestBookmarks }} \\ue725 {{ .ClosestBookmarks }}{{ end }}"}{{ if .Working.Changed }} *{{ end }} ";
+              style = "plain";
+              type = "jujutsu";
+              min_width = 70;
+              properties = {
+                # The shortest unique prefix is two or three characters and
+                # unreadable out of context; `jj log` itself shows eight.
+                change_id_min_len = 8;
+                # One `jj` call per prompt. It reads state rather than creating a
+                # new working-copy commit: `ignore_working_copy` defaults to true,
+                # so the prompt never snapshots.
+                fetch_status = true;
+              };
+            }
             {
               foreground = "p:lavender";
               template = "{{ .HEAD }}{{ if .Working.Changed }} *{{ end }}{{ if .Staging.Changed }} +{{ end }}{{ if gt .Ahead 0 }} {{ end }}{{ if gt .Behind 0 }} {{ end }} ";
@@ -63,6 +85,7 @@ in {
               type = "git";
               min_width = 70;
               properties = {
+                disable_with_jj = true;
                 branch_icon = unicode "\\ue725 ";
                 cherry_pick_icon = unicode "\\ue29b ";
                 commit_icon = unicode "\\uf417 ";
