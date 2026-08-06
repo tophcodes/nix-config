@@ -5,15 +5,15 @@
     bind = [
       # Apps
       "$mod, space, exec, vicinae toggle"
-      "$mod, c, exec, ${pkgs.harbor.spawn-term}/bin/spawn-term"
-      "$mod, e, exec, ${pkgs.harbor.spawn-term}/bin/spawn-term yazi"
+      "$mod, c, exec, kitty --directory \"$(focused-checkout)\""
+      "$mod, e, exec, kitty --directory \"$(focused-checkout)\" yazi"
       "$mod, d, exec, zeal"
       "$mod, g, exec, ${pkgs.harbor.hg-picker}/bin/hg-picker"
       "$mod, v, exec, vicinae vicinae://launch/clipboard/history"
       "$mod, b, exec, firefox -P default --name firefox-default"
       "$mod, n, exec, noctalia msg notification-dnd-toggle"
-      "$mod SHIFT, c, exec, ${pkgs.harbor.spawn-term}/bin/spawn-term claude"
-      "$mod SHIFT, e, exec, ${pkgs.harbor.spawn-term}/bin/spawn-term hx"
+      "$mod SHIFT, c, exec, kitty --directory \"$(focused-checkout)\" claude"
+      "$mod SHIFT, e, exec, kitty --directory \"$(focused-checkout)\" hx"
 
       # Window management
       "$mod, q, killactive"
