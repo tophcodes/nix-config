@@ -201,6 +201,7 @@ in {
 
       # System
       "iso-date" = "date -u +\"%Y-%m-%dT%H:%M:%SZ\"";
+      "zq" = "zoxide query";
       "jf" = "sudo journalctl -f -u";
       "sys stat" = "systemctl status";
       "sys up" = "systemctl start";
