@@ -12,7 +12,7 @@
       "$mod, v, exec, vicinae vicinae://launch/clipboard/history"
       "$mod, b, exec, firefox -P default --name firefox-default"
       "$mod, n, exec, noctalia msg notification-dnd-toggle"
-      "$mod SHIFT, c, exec, kitty --directory \"$(focused-checkout)\" claude"
+      "$mod, m, exec, checkout-menu"
       "$mod SHIFT, e, exec, kitty --directory \"$(focused-checkout)\" hx"
 
       # Window management
