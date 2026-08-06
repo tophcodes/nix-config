@@ -9,7 +9,6 @@ in {
     ./shell/fish.nix
     ./shell/nu.nix
     ./shell/zsh.nix
-    ./shell/review.nix
   ];
 
   # ~/.local/bin was previously prepended by a hand-written ~/.zshrc; owning it
