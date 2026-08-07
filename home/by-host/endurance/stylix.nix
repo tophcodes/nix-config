@@ -50,6 +50,26 @@
     neutral = h c.base02;
     neutral_variant = h c.base03;
   });
+
+  # kitty watches the directory holding each included config file, and recurses
+  # into it. The Stylix kitty target includes its theme by a bare store path,
+  # making that directory /nix/store itself — hundreds of thousands of inotify
+  # watches per kitty instance. That target is therefore off below, and the
+  # identical theme is re-exported into a directory of its own so a single file
+  # gets watched. The font and opacity settings replace what it would set.
+  #
+  # Narrowing programs.kitty.extraConfig with mkForce is not an alternative:
+  # home-manager feeds settings, font and actionAliases through that same
+  # option, so any override priority discards those along with the include.
+  kittyTheme =
+    pkgs.runCommand "kitty-theme" {}
+    ''
+      mkdir -p $out
+      cp ${c {
+        templateRepo = inputs.stylix.inputs.tinted-kitty;
+        target = "base16";
+      }} $out/theme.conf
+    '';
 in {
   imports = [inputs.stylix.homeModules.stylix];
 
@@ -59,6 +79,19 @@ in {
   ];
 
   xdg.configFile."noctalia/palettes/stylix.json".source = noctaliaBase16Palette;
+
+  programs.kitty = {
+    font = {
+      inherit (config.stylix.fonts.monospace) package name;
+      size = config.stylix.fonts.sizes.terminal;
+    };
+
+    settings.background_opacity = toString config.stylix.opacity.terminal;
+
+    extraConfig = ''
+      include ${kittyTheme}/theme.conf
+    '';
+  };
 
   stylix = {
     enable = true;
@@ -99,6 +132,7 @@ in {
       gtk.enable = false;
       qt.enable = true;
       firefox.profileNames = ["default" "work" "streaming"];
+      kitty.enable = false;
       kitty.variant256Colors = true;
     };
 
