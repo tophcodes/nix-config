@@ -1,17 +1,19 @@
-{lib, config, ...}: let
+{
+  lib,
+  config,
+  ...
+}: let
   # Extract tips from shell abbreviations
   abbrTips = lib.pipe config.programs.fish.shellAbbrs [
-    (lib.filterAttrs (name: value:
-      (lib.isAttrs value) && (value ? tip)))
-    (lib.mapAttrsToList (name: value:
-      "'${name} → ${value.tip}'"))
+    (lib.filterAttrs (_name: value:
+        (lib.isAttrs value) && (value ? tip)))
+    (lib.mapAttrsToList (name: value: "'${name} → ${value.tip}'"))
   ];
 
   # Function tips from descriptions
   functionTips = lib.pipe config.programs.fish.functions [
-    (lib.filterAttrs (name: value: value ? description))
-    (lib.mapAttrsToList (name: value:
-      "'${name} → ${value.description}'"))
+    (lib.filterAttrs (_name: value: value ? description))
+    (lib.mapAttrsToList (name: value: "'${name} → ${value.description}'"))
   ];
 
   # Hyprland keybind tips (manually curated for now)
