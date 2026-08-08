@@ -13,11 +13,15 @@
 in {
   flake.modules.homeManager.voxtype = {pkgs, ...}: let
     inherit (pkgs.stdenv.hostPlatform) system;
-    inherit (inputs.llm-agents.packages.${system}) voxtype;
+    # Not llm-agents' voxtype: that is the CPU-only build, which pins the CPU
+    # for the length of every transcription. This one runs whisper.cpp on the
+    # GPU through Vulkan.
+    inherit (inputs.self.packages.${system}) voxtype-vulkan voxtype-osd-gtk4;
+    voxtype = voxtype-vulkan;
 
     # llm-agents ships the daemon and the `voxtype-osd` launcher but not the
-    # frontend the launcher execs into, so this one is built here.
-    osd = inputs.self.packages.${system}.voxtype-osd-gtk4;
+    # frontend the launcher execs into, so this one is built here too.
+    osd = voxtype-osd-gtk4;
 
     inbox = "$HOME/${transcripts}";
 
