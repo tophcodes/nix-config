@@ -9,7 +9,7 @@
 
   # Both halves of the transcript inbox. Phone dictations are meant to land
   # here too, so the layout is by capture kind, not by tool.
-  transcripts = "pod/inbox/transcripts";
+  transcripts = "pod/system/inbox/transcripts";
 in {
   flake.modules.homeManager.voxtype = {pkgs, ...}: let
     inherit (pkgs.stdenv.hostPlatform) system;
