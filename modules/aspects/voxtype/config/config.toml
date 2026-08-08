@@ -245,7 +245,7 @@ icon_theme = "emoji"
 
 [meeting]
 # Absolute on purpose: TOML does not expand ~ or $HOME.
-storage_path = "/home/toph/pod/inbox/transcripts/meetings"
+storage_path = "/home/toph/pod/system/inbox/transcripts/meetings"
 
 # Unlocks the `voxtype meeting …` subcommands. It does NOT record anything on
 # its own — a meeting still has to be started explicitly.
