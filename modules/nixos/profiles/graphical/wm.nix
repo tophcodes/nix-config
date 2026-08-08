@@ -12,16 +12,11 @@
     };
   };
 in {
-  imports = [
-    #inputs.niri.nixosModules.niri
-  ];
-
   config = mkIf config.bosun.profiles.graphical.enable {
     environment.systemPackages = with pkgs; [
       wayland-utils
       wl-clipboard
       # libsForQt5.qtstyleplugin-kvantum
-      xwayland-satellite
       nautilus
       sddmTheme
       kdePackages.qtmultimedia # required for our sddm theme
