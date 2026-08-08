@@ -93,7 +93,10 @@ model = "base"
 # Language for transcription
 # Use "en" for English, "auto" for auto-detection
 # See: https://github.com/openai/whisper#available-models-and-languages
-language = "de"
+# Constrained auto-detect rather than "auto": whisper misdetects short
+# utterances when it may pick from all ~99 languages, and everything spoken
+# here is one of these two.
+language = ["de", "en"]
 
 # Translate non-English speech to English
 translate = false
