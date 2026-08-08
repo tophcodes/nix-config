@@ -32,6 +32,10 @@ in {
       runtimeInputs = [voxtype pkgs.jq pkgs.libnotify pkgs.coreutils];
       text = ''
         recorder="${inbox}/recorder"
+        meetings="${inbox}/meetings"
+        # Where the running dictation is being written. `stop` is a separate
+        # invocation, so the path has to survive between the two.
+        last="''${XDG_RUNTIME_DIR:-/tmp}/voxtype-capture.last"
 
         # `meeting status` exits 0 either way and only says so in prose.
         meeting_active() {
@@ -45,7 +49,10 @@ in {
         case "''${1:-status}" in
           dictate)
             mkdir -p "$recorder"
-            voxtype record start --file="$recorder/$(date +%Y-%m-%dT%H-%M-%S).txt"
+            target="$recorder/$(date +%Y-%m-%dT%H-%M-%S).txt"
+            printf '%s' "$target" > "$last"
+            voxtype record start --file="$target"
+            notify-send --app-name=voxtype "Dictation started" "→ ''${target/#$HOME/\~}"
             ;;
 
           meeting)
@@ -53,16 +60,33 @@ in {
               notify-send --app-name=voxtype "A meeting is already running"
             else
               voxtype meeting start
+              notify-send --app-name=voxtype "Meeting started" "Microphone and system audio"
             fi
             ;;
 
-          # One verb for both, so the launcher entry and the keybind do not
-          # have to know which kind of capture is running.
+          # One verb for both, so the launcher entries do not have to know
+          # which kind of capture is running.
           stop)
             if meeting_active; then
               voxtype meeting stop
+              mkdir -p "$meetings"
+              target="$meetings/$(date +%Y-%m-%dT%H-%M-%S).md"
+              # Meetings are stored as transcript.json; markdown with
+              # timestamps and speaker labels is what is actually readable.
+              if voxtype meeting export latest --format markdown \
+                   --timestamps --speakers --output "$target" 2>/dev/null; then
+                notify-send --app-name=voxtype "Meeting saved" "→ ''${target/#$HOME/\~}"
+              else
+                notify-send --app-name=voxtype "Meeting stopped" "Export failed, see: voxtype meeting list"
+              fi
             elif [ "$(rec_state)" = "recording" ]; then
               voxtype record stop
+              target="$(cat "$last" 2>/dev/null || true)"
+              if [ -n "$target" ]; then
+                notify-send --app-name=voxtype "Dictation saved" "→ ''${target/#$HOME/\~}"
+              else
+                notify-send --app-name=voxtype "Dictation stopped"
+              fi
             else
               notify-send --app-name=voxtype "Nothing to stop"
             fi

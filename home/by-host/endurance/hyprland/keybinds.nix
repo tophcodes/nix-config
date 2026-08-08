@@ -14,12 +14,8 @@
       "$mod, n, exec, noctalia msg notification-dnd-toggle"
       "$mod, m, exec, checkout-menu"
       "$mod, r, exec, voxtype record start"
-      # Session capture, as opposed to hold-to-dictate above: writes to the
-      # transcript inbox instead of typing at the cursor. Same three verbs as
-      # the launcher entries.
-      "$mod SHIFT, r, exec, voxtype-capture dictate"
-      "$mod SHIFT, m, exec, voxtype-capture meeting"
-      "$mod SHIFT, s, exec, voxtype-capture stop"
+      # Hold-to-dictate is the only capture on a key; starting and stopping a
+      # session runs through the launcher entries instead.
       "$mod SHIFT, e, exec, kitty --directory \"$(focused-checkout)\" hx"
 
       # Window management
