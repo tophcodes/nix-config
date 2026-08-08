@@ -19,7 +19,7 @@ in {
       fd # Fast find alternative
       bat # cat alternative
       zellij # terminal workspace
-      silver-searcher # ag search tool
+      silver-searcher-ng # ag search tool
       gum
       glow # Render markdown in the terminal
 

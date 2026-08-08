@@ -14,7 +14,9 @@
     # ships plugins — null prevents a second, divergent Hyprland in the profile.
     package = null;
     portalPackage = null;
-    plugins = with pkgs.hyprlandPlugins; [hyprbars hyprspace hypr-darkwindow];
+    # hyprspace is dropped: upstream only supports Hyprland up to 0.55, and it
+    # no longer compiles against 0.56 (nixpkgs #443989). Re-add once it builds.
+    plugins = with pkgs.hyprlandPlugins; [hyprbars hypr-darkwindow];
   };
 
   home.packages = with pkgs; [
