@@ -65,7 +65,7 @@ device = "default"
 sample_rate = 16000
 
 # Maximum recording duration in seconds (safety limit)
-max_duration_secs = 60
+max_duration_secs = 7200
 
 # [audio.feedback]
 # Enable audio feedback sounds (beeps when recording starts/stops)
@@ -243,6 +243,9 @@ icon_theme = "emoji"
 # stopped = ""
 
 [meeting]
+# Absolute on purpose: TOML does not expand ~ or $HOME.
+storage_path = "/home/toph/pod/inbox/transcripts/meetings"
+
 # Unlocks the `voxtype meeting …` subcommands. It does NOT record anything on
 # its own — a meeting still has to be started explicitly.
 enabled = true

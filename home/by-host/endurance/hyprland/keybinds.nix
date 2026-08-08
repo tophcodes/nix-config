@@ -14,6 +14,10 @@
       "$mod, n, exec, noctalia msg notification-dnd-toggle"
       "$mod, m, exec, checkout-menu"
       "$mod, r, exec, voxtype record start"
+      # Session capture, as opposed to hold-to-dictate above: starts writing to
+      # the transcript inbox, and the second press asks before it ends.
+      "$mod SHIFT, r, exec, voxtype-capture toggle"
+      "$mod SHIFT, m, exec, voxtype-capture meeting"
       "$mod SHIFT, e, exec, kitty --directory \"$(focused-checkout)\" hx"
 
       # Window management
