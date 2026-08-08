@@ -134,6 +134,10 @@ in {
       firefox.profileNames = ["default" "work" "streaming"];
       kitty.enable = false;
       kitty.variant256Colors = true;
+      # noctalia keeps its own builtin theme. The stylix target would force
+      # `theme.source = "custom"` plus a generated palette, and derives
+      # `theme.mode` from the (unset, hence light) polarity.
+      noctalia.enable = false;
     };
 
     opacity.terminal = 0.92;
