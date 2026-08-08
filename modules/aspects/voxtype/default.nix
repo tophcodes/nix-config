@@ -204,10 +204,12 @@ in {
 
       Service = {
         Type = "simple";
-        # The daemon spawns `voxtype-osd`, which resolves its frontend off
-        # PATH. Typing and clipboard backends are already wrapped into the
-        # voxtype binary itself, so they do not belong here.
-        Environment = ["PATH=${osd}/bin:/run/current-system/sw/bin"];
+        # Environment= replaces PATH rather than extending it, so both halves
+        # have to be named: the daemon spawns `voxtype-osd` from its own
+        # package, and that launcher then resolves the frontend off PATH.
+        # Typing and clipboard backends are wrapped into the voxtype binary
+        # itself and do not belong here.
+        Environment = ["PATH=${voxtype}/bin:${osd}/bin:/run/current-system/sw/bin"];
         # meeting.storage_path has to exist before the first meeting starts,
         # and it lives in the vault rather than under the daemon's state dir.
         # `%h` rather than $HOME: systemd expands the specifier itself, so
