@@ -49,7 +49,9 @@ in {
         case "''${1:-status}" in
           dictate)
             mkdir -p "$recorder"
-            target="$recorder/$(date +%Y-%m-%dT%H-%M-%S).txt"
+            # .md, not .txt: Obsidian only indexes markdown, and this lands
+            # in the vault.
+            target="$recorder/$(date +%Y-%m-%dT%H-%M-%S).md"
             printf '%s' "$target" > "$last"
             voxtype record start --file="$target"
             notify-send --app-name=voxtype "Dictation started" "→ ''${target/#$HOME/\~}"
@@ -83,6 +85,23 @@ in {
               voxtype record stop
               target="$(cat "$last" 2>/dev/null || true)"
               if [ -n "$target" ]; then
+                # Transcription runs after `stop` returns, so the file appears
+                # a moment later. Bounded wait rather than a fixed sleep.
+                for _ in $(seq 1 120); do
+                  [ -s "$target" ] && break
+                  sleep 0.5
+                done
+                if [ -s "$target" ]; then
+                  # A dictation is one utterance, so it carries no segment
+                  # timestamps — the capture time is the only one there is,
+                  # and it belongs in the note rather than only the filename.
+                  stamp="$(basename "$target" .md | sed 's/T/ /; s/-\([0-9][0-9]\)-\([0-9][0-9]\)$/:\1:\2/')"
+                  {
+                    printf -- '---\ncreated: %s\nsource: voxtype dictation\n---\n\n' "$stamp"
+                    cat "$target"
+                    printf '\n'
+                  } > "$target.tmp" && mv "$target.tmp" "$target"
+                fi
                 notify-send --app-name=voxtype "Dictation saved" "→ ''${target/#$HOME/\~}"
               else
                 notify-send --app-name=voxtype "Dictation stopped"
