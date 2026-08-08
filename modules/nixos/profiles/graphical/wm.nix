@@ -27,11 +27,6 @@ in {
       kdePackages.qtmultimedia # required for our sddm theme
     ];
 
-    programs.niri = {
-      enable = true;
-      package = pkgs.niri; # TODO: Use input niri pkgs/overlay!
-    };
-
     programs.hyprland.enable = true;
 
     services = {
