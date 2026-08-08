@@ -68,20 +68,10 @@ in {
 
           # One verb for both, so the launcher entries do not have to know
           # which kind of capture is running.
+          # A held key releases into this, so a running dictation has to win
+          # over a running meeting.
           stop)
-            if meeting_active; then
-              voxtype meeting stop
-              mkdir -p "$meetings"
-              target="$meetings/$(date +%Y-%m-%dT%H-%M-%S).md"
-              # Meetings are stored as transcript.json; markdown with
-              # timestamps and speaker labels is what is actually readable.
-              if voxtype meeting export latest --format markdown \
-                   --timestamps --speakers --output "$target" 2>/dev/null; then
-                notify-send --app-name=voxtype "Meeting saved" "→ ''${target/#$HOME/\~}"
-              else
-                notify-send --app-name=voxtype "Meeting stopped" "Export failed, see: voxtype meeting list"
-              fi
-            elif [ "$(rec_state)" = "recording" ]; then
+            if [ "$(rec_state)" = "recording" ]; then
               voxtype record stop
               target="$(cat "$last" 2>/dev/null || true)"
               if [ -n "$target" ]; then
@@ -105,6 +95,18 @@ in {
                 notify-send --app-name=voxtype "Dictation saved" "→ ''${target/#$HOME/\~}"
               else
                 notify-send --app-name=voxtype "Dictation stopped"
+              fi
+            elif meeting_active; then
+              voxtype meeting stop
+              mkdir -p "$meetings"
+              target="$meetings/$(date +%Y-%m-%dT%H-%M-%S).md"
+              # Meetings are stored as transcript.json; markdown with
+              # timestamps and speaker labels is what is actually readable.
+              if voxtype meeting export latest --format markdown \
+                   --timestamps --speakers --output "$target" 2>/dev/null; then
+                notify-send --app-name=voxtype "Meeting saved" "→ ''${target/#$HOME/\~}"
+              else
+                notify-send --app-name=voxtype "Meeting stopped" "Export failed, see: voxtype meeting list"
               fi
             else
               notify-send --app-name=voxtype "Nothing to stop"

@@ -7,7 +7,10 @@
       "$mod, space, exec, vicinae toggle"
       "$mod, c, exec, kitty --directory \"$(focused-checkout)\""
       "$mod, e, exec, kitty --directory \"$(focused-checkout)\" yazi"
-      "$mod, d, exec, zeal"
+      # Hold to capture into the vault inbox, as opposed to $mod+r above,
+      # which types the transcription at the cursor. Zeal moved off this key;
+      # it is still installed and in the launcher.
+      "$mod, d, exec, voxtype-capture dictate"
       "$mod, g, exec, ${pkgs.harbor.hg-picker}/bin/hg-picker"
       "$mod, v, exec, vicinae vicinae://launch/clipboard/history"
       "$mod, b, exec, firefox -P default --name firefox-default"
@@ -83,6 +86,7 @@
     # cursor. Needs the release half below, so it cannot live in `bind`.
     bindr = [
       "$mod, r, exec, voxtype record stop"
+      "$mod, d, exec, voxtype-capture stop"
     ];
 
     bindm = [
