@@ -100,10 +100,12 @@ in {
               voxtype meeting stop
               mkdir -p "$meetings"
               target="$meetings/$(date +%Y-%m-%dT%H-%M-%S).md"
-              # Meetings are stored as transcript.json; markdown with
-              # timestamps and speaker labels is what is actually readable.
+              # Meetings are stored as transcript.json; markdown is what is
+              # actually readable. Only --timestamps: combined with
+              # --speakers the CLI rejects the invocation and writes a file
+              # with the header but no transcript.
               if voxtype meeting export latest --format markdown \
-                   --timestamps --speakers --output "$target" 2>/dev/null; then
+                   --timestamps --output "$target" 2>/dev/null; then
                 notify-send --app-name=voxtype "Meeting saved" "→ ''${target/#$HOME/\~}"
               else
                 notify-send --app-name=voxtype "Meeting stopped" "Export failed, see: voxtype meeting list"
