@@ -46,7 +46,7 @@ in {
 
           meeting)
             if meeting_active; then
-              notify-send --app-name=voxtype "Meeting läuft bereits"
+              notify-send --app-name=voxtype "A meeting is already running"
             else
               voxtype meeting start
             fi
@@ -60,7 +60,7 @@ in {
             elif [ "$(rec_state)" = "recording" ]; then
               voxtype record stop
             else
-              notify-send --app-name=voxtype "Nichts aufzunehmen"
+              notify-send --app-name=voxtype "Nothing to stop"
             fi
             ;;
 
@@ -128,8 +128,8 @@ in {
 
           local answer
           answer="$(notify-send --app-name=voxtype \
-            -A yes="Transkribieren" -A no="Nein danke" \
-            "Meeting erkannt" "$app nimmt gerade auf." 2>/dev/null || true)"
+            -A yes="Transcribe" -A no="No thanks" \
+            "Meeting detected" "$app is recording." 2>/dev/null || true)"
           if [ "$answer" = "yes" ]; then
             voxtype meeting start
           fi
