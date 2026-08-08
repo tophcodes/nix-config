@@ -1,0 +1,10 @@
+# Only what differs from voxtype's built-in defaults — everything else falls
+# through, so this file stays short instead of drifting against upstream.
+# `voxtype configure` edits it in place and preserves comments and unknown
+# fields, so the TUI and hand edits coexist.
+
+[meeting.audio]
+# "auto" captures system output alongside the microphone, so the remote side
+# of a call lands in the transcript. With loopback active, speaker attribution
+# can tell "You" from "Remote" off the audio source alone, no ML model needed.
+loopback_device = "auto"

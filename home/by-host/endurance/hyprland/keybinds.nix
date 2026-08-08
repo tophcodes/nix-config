@@ -13,6 +13,7 @@
       "$mod, b, exec, firefox -P default --name firefox-default"
       "$mod, n, exec, noctalia msg notification-dnd-toggle"
       "$mod, m, exec, checkout-menu"
+      "$mod, r, exec, voxtype record start"
       "$mod SHIFT, e, exec, kitty --directory \"$(focused-checkout)\" hx"
 
       # Window management
@@ -74,6 +75,12 @@
 
       # Center floating window
       "$mod, o, centerwindow"
+    ];
+
+    # Push-to-talk dictation: hold to record, release to transcribe at the
+    # cursor. Needs the release half below, so it cannot live in `bind`.
+    bindr = [
+      "$mod, r, exec, voxtype record stop"
     ];
 
     bindm = [
