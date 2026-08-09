@@ -71,11 +71,13 @@ pkgs.rustPlatformUnstable.buildRustPackage rec {
     install -Dm644 config/default.toml \
       $out/share/voxtype/default-config.toml
 
-    # The typing and clipboard backends are resolved at runtime off PATH, so
-    # they are wrapped in rather than left to the caller's environment.
+    # Backends resolved at runtime off PATH, wrapped in rather than left to
+    # the caller's environment: typing, clipboard, and — for meeting-mode
+    # loopback capture — pulseaudio's `parec` and `pactl`.
     wrapProgram $out/bin/voxtype \
       --prefix PATH : ${
       lib.makeBinPath (with pkgs; [
+        pulseaudio
         wtype
         dotool
         wl-clipboard

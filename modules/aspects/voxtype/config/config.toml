@@ -258,7 +258,4 @@ enabled = true
 # "auto" captures system output alongside the microphone, so the remote side of
 # a call lands in the transcript. With loopback active, speaker attribution can
 # tell "You" from "Remote" off the audio source alone, no ML model needed.
-# "auto" logs "No monitor source found" here even though monitors exist,
-# so the default sink's monitor is named outright. Change this along
-# with the output device.
-loopback_device = "alsa_output.usb-SteelSeries_Arctis_Pro_Wireless-00.stereo-game.monitor"
+loopback_device = "auto"
