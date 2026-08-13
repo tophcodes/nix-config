@@ -1,7 +1,13 @@
 {inputs, ...}: {
   # The host stack: PipeWire serving all three APIs, plus musnix for the
   # realtime scheduling privileges a low-latency graph needs.
-  flake.modules.nixos.audio = {pkgs, ...}: {
+  # Reads `fleet.user.name`, so a host importing this must import the `user`
+  # aspect too.
+  flake.modules.nixos.audio = {
+    config,
+    pkgs,
+    ...
+  }: {
     imports = [inputs.musnix.nixosModules.default];
 
     musnix = {
@@ -9,7 +15,7 @@
       rtcqs.enable = true;
     };
 
-    users.users.toph.extraGroups = ["audio"];
+    users.users.${config.fleet.user.name}.extraGroups = ["audio"];
 
     services.pipewire = {
       enable = true;
