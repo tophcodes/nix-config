@@ -1,18 +1,13 @@
+# The graphical session: Hyprland under SDDM, with the portals a Wayland
+# desktop needs to talk to GTK and Qt applications.
 {
-  pkgs,
-  lib,
-  config,
-  ...
-}: let
-  inherit (lib) mkIf;
-
-  sddmTheme = pkgs.sddm-astronaut.override {
-    embeddedTheme = "japanese_aesthetic";
-    themeConfig = {
+  flake.modules.nixos.graphical = {pkgs, ...}: let
+    sddmTheme = pkgs.sddm-astronaut.override {
+      embeddedTheme = "japanese_aesthetic";
+      themeConfig = {
+      };
     };
-  };
-in {
-  config = mkIf config.bosun.profiles.graphical.enable {
+  in {
     environment.systemPackages = with pkgs; [
       wayland-utils
       wl-clipboard
