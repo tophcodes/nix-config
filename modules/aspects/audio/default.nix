@@ -26,8 +26,9 @@
     # plugins through LADSPA_PATH. The suffix is required — filter-chain only
     # appends ".so" when resolving a bare name against the search path, not
     # for an absolute path, despite what the upstream example claims.
+    # rnnoise over DeepFilterNet: it sounds less processed on this mic and
+    # costs about a tenth of the CPU (0.02 vs 0.19 quantum load).
     rnnoise = "${pkgs.rnnoise-plugin.ladspa}/lib/ladspa/librnnoise_ladspa.so";
-    deepFilter = "${pkgs.deepfilternet}/lib/ladspa/libdeep_filter_ladspa.so";
 
     # A voice chain: 80 Hz high-pass into one denoiser, mono throughout.
     # `capture.props` only — linking a capture chain into the playback graph
@@ -111,16 +112,6 @@
         inputPort = "Input";
         outputPort = "Output";
         control = ''"VAD Threshold (%)" = 50.0 "VAD Grace Period (ms)" = 200.0'';
-      };
-
-      "pipewire/pipewire.conf.d/61-mic-deepfilter.conf".text = mkChain {
-        name = "mic_deepfilter";
-        description = "Mic (DeepFilter)";
-        plugin = deepFilter;
-        label = "deep_filter_mono";
-        inputPort = "Audio In";
-        outputPort = "Audio Out";
-        control = ''"Attenuation Limit (dB)" = 24.0'';
       };
     };
   };
