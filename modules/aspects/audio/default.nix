@@ -1,10 +1,12 @@
 {inputs, ...}: {
   # The host stack: PipeWire serving all three APIs, plus musnix for the
   # realtime scheduling privileges a low-latency graph needs.
-  # Reads `fleet.user.name`, so a host importing this must import the `user`
-  # aspect too.
+  # Needs the `user` aspect imported alongside it to read `fleet.user`, but
+  # tolerates that host having no user — a headless box can still run the
+  # audio stack, there is just nobody to put in the group.
   flake.modules.nixos.audio = {
     config,
+    lib,
     pkgs,
     ...
   }: {
@@ -15,7 +17,9 @@
       rtcqs.enable = true;
     };
 
-    users.users.${config.fleet.user.name}.extraGroups = ["audio"];
+    users.users = lib.mkIf (config.fleet.user != null) {
+      ${config.fleet.user.name}.extraGroups = ["audio"];
+    };
 
     services.pipewire = {
       enable = true;
