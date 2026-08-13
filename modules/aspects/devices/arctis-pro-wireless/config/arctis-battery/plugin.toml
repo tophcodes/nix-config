@@ -1,0 +1,37 @@
+# Bar widget showing the headset's battery, read through headsetcontrol.
+#
+# `min_noctalia` is mandatory and the manifest is rejected without it. Note this
+# is the v5 manifest dialect: settings carry `label`/`description`, not the
+# `label_key`/`description_key` pair newer plugins use, and `plugin_api` is not
+# read at all.
+
+id = "toph/arctis-battery"
+name = "Arctis Battery"
+min_noctalia = "5.0.0"
+version = "1.0.0"
+author = "toph"
+license = "MIT"
+icon = "audio-headset"
+description = "SteelSeries Arctis battery level in the bar, polled through headsetcontrol."
+tags = ["bar", "hardware", "battery"]
+
+[[widget]]
+id = "battery"
+entry = "widget.luau"
+
+  # Each poll wakes the wireless link to ask the headset, so this is not free.
+  [[widget.setting]]
+  key = "poll_seconds"
+  type = "int"
+  label = "Poll interval (seconds)"
+  description = "How often headsetcontrol is asked for the battery level."
+  default = 60
+  min = 15
+  max = 900
+
+  [[widget.setting]]
+  key = "hide_when_absent"
+  type = "bool"
+  label = "Hide when nothing answers"
+  description = "Hide the widget when the headset is off or the base station is unplugged, instead of showing a placeholder."
+  default = true

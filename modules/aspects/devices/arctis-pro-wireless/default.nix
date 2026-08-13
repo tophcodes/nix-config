@@ -9,9 +9,23 @@
 # The rules file ships the whole Arctis family, not just this model. The aspect
 # is still named for the device because inclusion is the switch: a host imports
 # it when the base station actually gets plugged in there.
-{
+{config, ...}: let
+  # Bound out here because the module below shadows `config` with its own.
+  inherit (config.flake.lib) aspects;
+in {
   flake.modules.nixos.arctis-pro-wireless = {pkgs, ...}: {
     environment.systemPackages = [pkgs.headsetcontrol];
     services.udev.packages = [pkgs.headsetcontrol];
+  };
+
+  # The bar widget, for a host that also runs noctalia. Separate from the NixOS
+  # half on purpose — a headless machine can still want the CLI.
+  #
+  # noctalia scans this directory unconditionally and at highest precedence, so
+  # no plugin source has to be registered. Activating it is still two steps: the
+  # plugin only loads once its id is listed in noctalia's `plugins.enabled`, and
+  # the widget only appears once `toph/arctis-battery:battery` is in a bar.
+  flake.modules.homeManager.arctis-pro-wireless = aspects.mkSymlinks {
+    ".local/share/noctalia/plugins/arctis-battery" = ./config/arctis-battery;
   };
 }
