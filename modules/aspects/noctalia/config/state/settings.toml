@@ -1,0 +1,183 @@
+[bar]
+order = [ "main", "Second" ]
+
+    [bar.Second]
+    enabled = false
+
+        [bar.Second.monitor.DP-3]
+        center = []
+        end = [ "workspaces" ]
+        position = "bottom"
+        start = [ "clock" ]
+        thickness = 50
+
+        [bar.Second.monitor.HDMI-A-1]
+
+    [bar.main]
+    center = [ "workspaces" ]
+    end = [ "screenshot", "recorder", "tray", "toph/arctis-battery:battery" ]
+    font_weight = 400
+    margin_ends = 500
+    padding = 8
+    radius = 3
+    scale = 1.4000000134110451
+    start = [ "control-center", "clock", "media", "notifications" ]
+    thickness = 50
+    widget_spacing = 23
+
+        [bar.main.monitor.DP-3]
+        enabled = false
+        start = [ "control-center", "clock", "media", "notifications" ]
+
+        [bar.main.monitor.HDMI-A-1]
+
+[calendar]
+enabled = true
+
+    [calendar.account.caldav]
+    name = "Radicle"
+    provider = "custom"
+    server_url = "https://dav.toph.so"
+    type = "caldav"
+    username = "toph"
+
+[desktop_widgets]
+schema_version = 2
+widget_order = [ "desktop-widget-0000000000000001" ]
+
+    [desktop_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [desktop_widgets.widget.desktop-widget-0000000000000001]
+    box_height = 336.0
+    box_width = 432.0
+    cx = 3616.0
+    cy = 1976.0
+    flip_x = true
+    output = "HDMI-A-1"
+    rotation = 0.0
+    type = "sticker"
+
+        [desktop_widgets.widget.desktop-widget-0000000000000001.settings]
+        background = false
+        image_path = "/home/toph/Pictures/images/138746dc-0141-4b30-a789-53f2248cb0c0.png"
+        opacity = 1.0
+
+[dock]
+auto_hide = true
+enabled = true
+magnification = false
+monitors = [ "HDMI-A-1" ]
+pinned = [ "kitty" ]
+reserve_space = false
+show_dots = true
+
+[location]
+address = "Blankenbach, DE"
+
+[lockscreen]
+allow_empty_password = true
+
+[lockscreen_widgets]
+enabled = true
+schema_version = 2
+widget_order = [ "lockscreen-login-box@HDMI-A-1", "lockscreen-login-box@DP-3" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-3"]
+    box_height = 0.0
+    box_width = 0.0
+    cx = 540.0
+    cy = 1797.0
+    output = "DP-3"
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-3".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        input_opacity = 1.0
+        input_radius = 6.0
+        show_login_button = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-1"]
+    box_height = 0.0
+    box_width = 0.0
+    cx = 1920.0
+    cy = 2037.0
+    output = "HDMI-A-1"
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@HDMI-A-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        input_opacity = 1.0
+        input_radius = 6.0
+        show_login_button = true
+
+[plugins]
+enabled = [ "noctalia/screen_recorder", "toph/arctis-battery" ]
+
+[shell]
+avatar_path = "/home/toph/Pictures/images/968a929efc708a66.png"
+clipboard_enabled = false
+polkit_agent = true
+settings_show_advanced = true
+ui_scale = 1.300000011920929
+
+    [shell.panel]
+    open_near_click_control_center = true
+
+[theme]
+builtin = "Rosé Pine"
+community_palette = "One Dark Two"
+mode = "auto"
+source = "custom"
+
+    [theme.templates]
+    community_ids = [ "obsidian", "vscode", "steam", "yazi" ]
+
+[widget.clock]
+font_weight = 700
+scale = 1.3
+
+[widget.control-center]
+capsule = true
+capsule_fill = "primary"
+capsule_radius = 2
+color = "on_primary"
+
+[widget.media]
+art_size = 32.0
+capsule = true
+capsule_padding = 15.0
+capsule_radius = 5
+max_length = 628
+min_length = 224
+scale = 0.69999999999999996
+
+[widget.notifications]
+hide_when_no_unread = true
+
+[widget.recorder]
+type = "noctalia/screen_recorder:recorder"
+
+[widget.tray]
+capsule = true
+capsule_padding = 15.0
+capsule_radius = 3
+
+[widget.workspaces]
+capsule_radius = 2
+display = "none"
+max_label_chars = 2
+scale = 1.1000000000000001
