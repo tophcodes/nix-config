@@ -11,7 +11,7 @@ min_noctalia = "5.0.0"
 version = "1.0.0"
 author = "toph"
 license = "MIT"
-icon = "audio-headset"
+icon = "headset"
 description = "SteelSeries Arctis battery level in the bar, polled through headsetcontrol."
 tags = ["bar", "hardware", "battery"]
 

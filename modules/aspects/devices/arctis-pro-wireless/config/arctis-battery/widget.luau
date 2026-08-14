@@ -13,7 +13,9 @@
 
 local COMMAND = "headsetcontrol -b -o json"
 local TIMEOUT_MS = 5000
-local GLYPH = "audio-headset"
+-- Tabler icon name. An unknown name renders as the missing-glyph skull rather
+-- than failing, so it is worth checking against the shipped tabler.json.
+local GLYPH = "headset"
 
 local pollSeconds = noctalia.getConfig("poll_seconds")
 local hideWhenAbsent = noctalia.getConfig("hide_when_absent")
