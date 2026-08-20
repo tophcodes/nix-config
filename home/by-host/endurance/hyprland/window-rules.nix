@@ -17,6 +17,14 @@ _: {
       "no_screen_share on, match:class ^(thunderbird)$"
       "no_screen_share on, match:title ^(ld\\.toph\\.so)$"
 
+      # The aleph overlay asks for a 160x32 always-on-top pill, which a Wayland
+      # client cannot enforce — without these it is tiled to half the screen and
+      # reads as one big white window.
+      "float on, match:class ^(aleph-desktop)$"
+      "size 160 32, match:class ^(aleph-desktop)$"
+      "pin on, match:class ^(aleph-desktop)$"
+      "border_size 0, match:class ^(aleph-desktop)$"
+
       # Floating windows
       "float on, match:class ^(org\\.zealdocs\\.zeal)$"
       "center 1, match:class ^(org\\.zealdocs\\.zeal)$"
