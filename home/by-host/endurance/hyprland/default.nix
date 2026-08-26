@@ -5,6 +5,7 @@
     ./window-rules.nix
     ./wallpaper.nix
     ./idle.nix
+    ./share-picker.nix
   ];
 
   wayland.windowManager.hyprland = {
