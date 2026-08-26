@@ -46,6 +46,14 @@ in {
           voxtype status --format json 2>/dev/null | jq -r '.alt // "idle"'
         }
 
+        # Every verb takes exactly one word. Without this a mistyped
+        # `voxtype-capture meeting stop` silently runs `meeting` and reports
+        # that a meeting is already running.
+        if [ "$#" -gt 1 ]; then
+          echo "usage: voxtype-capture [dictate|meeting|stop|cancel|status]" >&2
+          exit 64
+        fi
+
         case "''${1:-status}" in
           dictate)
             mkdir -p "$recorder"
@@ -100,15 +108,29 @@ in {
               voxtype meeting stop
               mkdir -p "$meetings"
               target="$meetings/$(date +%Y-%m-%dT%H-%M-%S).md"
-              # Meetings are stored as transcript.json; markdown is what is
-              # actually readable. Only --timestamps: combined with
-              # --speakers the CLI rejects the invocation and writes a file
-              # with the header but no transcript.
-              if voxtype meeting export latest --format markdown \
-                   --timestamps --output "$target" 2>/dev/null; then
+              # Meetings are stored as transcript.json; markdown is the
+              # readable form. Only --timestamps: combined with --speakers
+              # the CLI rejects the invocation.
+              #
+              # `meeting stop` only requests the stop, and the daemon flushes
+              # transcript.json a moment later. An export issued before that
+              # flush still exits 0 and writes a file holding the header and
+              # no transcript, so success is judged on the content: with
+              # --timestamps every segment is its own `*[mm:ss]*` line.
+              saved=""
+              for _ in $(seq 1 60); do
+                if voxtype meeting export latest --format markdown \
+                     --timestamps --output "$target" 2>/dev/null \
+                   && grep -q '^\*\[' "$target"; then
+                  saved=yes
+                  break
+                fi
+                sleep 0.5
+              done
+              if [ -n "$saved" ]; then
                 notify-send --app-name=voxtype "Meeting saved" "→ ''${target/#$HOME/\~}"
               else
-                notify-send --app-name=voxtype "Meeting stopped" "Export failed, see: voxtype meeting list"
+                notify-send --app-name=voxtype "Meeting stopped" "No transcript, see: voxtype meeting list"
               fi
             else
               notify-send --app-name=voxtype "Nothing to stop"
