@@ -3,7 +3,6 @@
     ./settings.nix
     ./keybinds.nix
     ./window-rules.nix
-    ./wallpaper.nix
     ./idle.nix
     ./share-picker.nix
   ];

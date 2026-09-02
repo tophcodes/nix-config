@@ -140,11 +140,12 @@ ui_scale = 1.300000011920929
 [theme]
 builtin = "Rosé Pine"
 community_palette = "One Dark Two"
+custom_palette = "mood"
 mode = "auto"
 source = "custom"
 
     [theme.templates]
-    community_ids = [ "obsidian", "vscode", "steam", "yazi" ]
+    community_ids = [ "steam", "yazi" ]
 
 [widget.clock]
 font_weight = 700

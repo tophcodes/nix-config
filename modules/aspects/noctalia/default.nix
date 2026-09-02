@@ -24,7 +24,7 @@ in {
   flake.modules.homeManager.noctalia = {pkgs, ...}: let
     syncMirror = pkgs.writeShellApplication {
       name = "noctalia-mirror-settings";
-      runtimeInputs = with pkgs; [diffutils coreutils];
+      runtimeInputs = with pkgs; [diffutils coreutils gnused];
       text = ''
         state="$HOME/.local/state/noctalia/settings.toml"
         mirror=${mirror}
@@ -32,11 +32,18 @@ in {
         # Nothing has run yet on a fresh machine; that is not an error.
         [ -f "$state" ] || exit 0
 
-        if cmp -s "$state" "$mirror"; then
+        # The wallpaper tables hold the paths of whatever image is showing.
+        # They turn over on every mood switch and carry no decision, so the
+        # mirror drops them rather than committing a new one each hour.
+        strip=$(mktemp)
+        trap 'rm -f "$strip"' EXIT
+        sed -E '/^\[wallpaper(\.|\])/,/^$/d' "$state" >"$strip"
+
+        if cmp -s "$strip" "$mirror"; then
           exit 0
         fi
 
-        cp "$state" "$mirror"
+        cp "$strip" "$mirror"
         echo "refreshed noctalia settings mirror"
       '';
     };
@@ -66,7 +73,9 @@ in {
         };
 
         wallpaper = {
-          enabled = false;
+          # The `mood` aspect sets a path per output; the directory below only
+          # serves noctalia's own random picker, which nothing calls.
+          enabled = true;
           directory = "~/Pictures/Wallpapers";
           transition = ["fade" "disc" "stripes" "wipe" "pixelate" "honeycomb"];
         };
