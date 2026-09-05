@@ -140,7 +140,7 @@ in {
       noctalia.enable = false;
     };
 
-    opacity.terminal = 0.92;
+    opacity.terminal = 1.0;
 
     cursor = {
       package = pkgs.rose-pine-cursor;

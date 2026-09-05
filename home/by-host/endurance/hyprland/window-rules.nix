@@ -58,9 +58,6 @@ _: {
       "workspace 6 silent, match:class ^([Ss]ignal)$"
       "workspace 6 silent, match:class ^([Ww]asistlos)$"
 
-      # Kitty: slight transparency
-      "opacity 0.97 0.97, match:class ^(kitty)$"
-
       # Fullscreen (mode 1 / maximize): thicker red border
       "border_size 6, match:fullscreen 1"
       "border_color rgb(e67e80), match:fullscreen 1"
