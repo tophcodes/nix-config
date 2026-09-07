@@ -1,0 +1,17 @@
+no_update_check = true
+diff_view = "unified"
+scroll_offset = 5
+
+# A full replacement of tuicr's built-in list, so the four types a line
+# comment needs are repeated here alongside the three that carry a verdict.
+# The verdict types are only meaningful on a review-level comment (;c), where
+# userprompt's request_review reads them as the review's outcome.
+comment_types = [
+  {id = "note", definition = "observation, no action implied"},
+  {id = "suggestion", definition = "possible improvement, optional"},
+  {id = "issue", color = "red", definition = "problem to fix"},
+  {id = "praise", color = "green", definition = "positive feedback"},
+  {id = "approve", color = "green", definition = "verdict: implement as presented"},
+  {id = "revise", color = "yellow", definition = "verdict: do not implement, revise and present again"},
+  {id = "reject", color = "red", definition = "verdict: abandon the approach, return to brainstorming"},
+]
