@@ -1,0 +1,35 @@
+{
+  "title": "jj",
+  "order": 20,
+  "groups": [
+    {
+      "name": "Working copy",
+      "entries": [
+        { "keys": "jj st", "desc": "What is uncommitted right now" },
+        { "keys": "jj diff", "desc": "Full working-copy diff" },
+        { "keys": "jj commit -m", "desc": "Describe this change and start a new one" },
+        { "keys": "jj commit -m … -- path", "desc": "Commit only these paths" }
+      ]
+    },
+    {
+      "name": "History",
+      "entries": [
+        { "keys": "jj log", "desc": "Graph of the visible changes" },
+        { "keys": "jj show <rev>", "desc": "One change with its diff" },
+        { "keys": "jj describe", "desc": "Rewrite the message of a change" },
+        { "keys": "jj squash", "desc": "Fold this change into its parent" },
+        { "keys": "jj op undo", "desc": "Undo the last operation", "note": "local safety net" }
+      ]
+    },
+    {
+      "name": "Branches and remote",
+      "entries": [
+        { "keys": "jj bookmark list", "desc": "Bookmarks and where they point" },
+        { "keys": "jj bookmark set <n>", "desc": "Move a bookmark here" },
+        { "keys": "jj git fetch", "desc": "Fetch from the remote" },
+        { "keys": "jj git push", "desc": "Push a bookmark", "note": "remote-visible" },
+        { "keys": "jj workspace add", "desc": "Second checkout of the same repo" }
+      ]
+    }
+  ]
+}
