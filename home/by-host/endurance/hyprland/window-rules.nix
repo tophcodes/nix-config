@@ -18,7 +18,7 @@ _: {
       "no_screen_share on, match:title ^(ld\\.toph\\.so)$"
 
       # The aleph overlay asks for a 160x32 always-on-top pill, which a Wayland
-      # client cannot enforce — without these it is tiled to half the screen and
+      # client cannot enforce. Without these it is tiled to half the screen and
       # reads as one big white window.
       "float on, match:class ^(aleph-desktop)$"
       "size 160 32, match:class ^(aleph-desktop)$"
@@ -58,17 +58,24 @@ _: {
       "workspace 6 silent, match:class ^([Ss]ignal)$"
       "workspace 6 silent, match:class ^([Ww]asistlos)$"
 
+      # Unreal Editor -> HDMI-A-1 (the 4K panel). The title matcher is
+      # load-bearing: Slate builds context menus and tooltips as their own
+      # toplevels carrying class UnrealEditor with an empty title, and a
+      # monitor rule on the bare class drags them off the cursor onto the
+      # other output.
+      "monitor HDMI-A-1, match:class ^(UnrealEditor)$ match:title .+"
+
       # Fullscreen (mode 1 / maximize): thicker red border
       "border_size 6, match:fullscreen 1"
       "border_color rgb(e67e80), match:fullscreen 1"
 
-      # Firefox fullscreen on left monitor (DP-3, workspaces 6-8): fake it —
+      # Firefox fullscreen on left monitor (DP-3, workspaces 6-8): fake it.
       # fullscreen_state is a static rule and doesn't react to the client's
       # live fullscreen request, so Hyprland still took over the whole
       # monitor. suppress_event drops that request entirely (window stays
       # tiled); Firefox still hides its chrome since that's driven by its
       # own fullscreen API, independent of the compositor's ack. Field is
-      # `suppress_event` (snake_case v3 field) — `suppressevent` is the old
+      # `suppress_event` (snake_case v3 field). `suppressevent` is the old
       # windowrulev2 keyword and errors here with "invalid field type".
       # class is `firefox.*` because each profile now launches with its own
       # `--name firefox-<profile>` (see below).
@@ -84,7 +91,7 @@ _: {
       "workspace 5 silent, match:class ^(firefox-prune)$"
 
       # JetBrains: suppress phantom windows (RE2 doesn't support lookaheads,
-      # so we can't exclude toolbox here — apply per-IDE if needed)
+      # so we can't exclude toolbox here; apply per-IDE if needed)
       # "no_focus on, match:class ^(jetbrains-idea|jetbrains-rider|jetbrains-clion)$, match:floating 1, match:title ^win\\d+$"
     ];
   };
