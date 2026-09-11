@@ -15,3 +15,16 @@ hidden = false
 [editor.whitespace.render]
 tabpad = "all"
 
+
+[keys.normal.space]
+# Sends the buffer to the herdr agent named by its directory and empties it. The
+# send is bound rather than triggered by a write so an autosave cannot fire a
+# prompt. It pipes rather than pointing at the file because `:write` completes
+# asynchronously, so a reader started next to it sees the previous contents.
+# See claude-md-stream.
+ret = [
+  "select_all",
+  ":pipe-to claude-send --stdin '%{buffer_name}'",
+  "delete_selection",
+  ":write!",
+]
