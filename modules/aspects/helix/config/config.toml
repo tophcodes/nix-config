@@ -29,6 +29,15 @@ ret = [
   ":write!",
 ]
 
+# Sends without waiting for the agent to finish: stops the turn it is in and
+# hands over the queue at once.
+"!" = [
+  "select_all",
+  ":pipe-to claude-send --now --stdin '%{buffer_name}'",
+  "delete_selection",
+  ":write!",
+]
+
 # Takes waiting messages back out of the queue and into this buffer. The buffer
 # goes through the command and comes back with the recovered text in front of
 # it, so text typed since is kept: `x` empties the queue and stops the agent,
