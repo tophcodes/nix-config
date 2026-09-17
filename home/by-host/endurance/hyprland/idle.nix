@@ -6,6 +6,21 @@
   hyprctl = lib.getExe' pkgs.hyprland "hyprctl";
   loginctl = lib.getExe' pkgs.systemd "loginctl";
 
+  # `hyprctl dispatch dpms on` without a monitor argument only wakes the outputs
+  # the compositor still holds when the dispatch lands. While both panels sit
+  # DPMS-off the LG TV drops its HPD line; aquamarine rescans the connectors and
+  # reshuffles CRTCs, DP-3 loses its CRTC in that window and stays disabled with
+  # workspaces 6-8 on a dark panel. Re-assert DPMS per monitor over a few
+  # seconds so an output that comes back late is covered as well.
+  wakeDisplays = pkgs.writeShellScript "wake-displays" ''
+    for _ in 1 2 3; do
+      for m in $(${hyprctl} -j monitors all | ${lib.getExe pkgs.jq} -r '.[].name'); do
+        ${hyprctl} dispatch dpms on "$m"
+      done
+      ${pkgs.coreutils}/bin/sleep 2
+    done
+  '';
+
   # hyprlock is the native Hyprland ext-session-lock client (PAM auth against the
   # `hyprlock` service, declared on the host). It has no animation redraw loop, so
   # it can't repeat the swaylock-plugin 1.8.6 SEGV in output_redraw_timeout that
@@ -62,7 +77,7 @@ in {
       general = {
         lock_cmd = "${locker}";
         before_sleep_cmd = "${loginctl} lock-session";
-        after_sleep_cmd = "${hyprctl} dispatch dpms on";
+        after_sleep_cmd = "${wakeDisplays}";
         # Honor idle inhibitors: a fullscreen video (Firefox/Chrome/mpv) holds a
         # Wayland idle-inhibitor, so the compositor never reports idle and none
         # of these timers fire while it plays. That is the "except YouTube" case.
@@ -79,7 +94,7 @@ in {
         {
           timeout = 2700;
           on-timeout = "${hyprctl} dispatch dpms off";
-          on-resume = "${hyprctl} dispatch dpms on";
+          on-resume = "${wakeDisplays}";
         }
       ];
     };
