@@ -51,12 +51,16 @@
   '';
 
   # `pin` only takes floating windows, so pinning floats the window first and
-  # unpinning tiles it again.
+  # unpinning tiles it again. On the 4K panel a pinned window gets a
+  # centred 16:10 frame, since the tile size it would keep has no set shape.
   togglePin = pkgs.writeShellScript "toggle-pin" ''
     if [ "$(${hyprctl} -j activewindow | ${jq} .pinned)" = true ]; then
       ${hyprctl} --batch "dispatch pin ; dispatch settiled"
     else
       ${hyprctl} --batch "dispatch setfloating ; dispatch pin"
+      if [ "$(${hyprctl} -j activeworkspace | ${jq} -r .monitor)" = HDMI-A-1 ]; then
+        ${hyprctl} --batch "dispatch resizeactive exact 40% 45% ; dispatch centerwindow"
+      fi
     fi
   '';
 
