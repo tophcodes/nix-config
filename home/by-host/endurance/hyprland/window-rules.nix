@@ -52,11 +52,11 @@ _: {
       "center 1, match:class ^(dev\\.noctalia\\.Noctalia\\.Settings)$"
       "size 1744 1354, match:class ^(dev\\.noctalia\\.Noctalia\\.Settings)$"
 
-      # Messaging apps -> left vertical monitor (DP-3, workspace 6)
-      "workspace 6 silent, match:class ^([Ss]lack)$"
-      "workspace 6 silent, match:class ^(vesktop)$"
-      "workspace 6 silent, match:class ^([Ss]ignal)$"
-      "workspace 6 silent, match:class ^([Ww]asistlos)$"
+      # Messaging apps -> left vertical monitor (DP-3, left half of workspace 6)
+      "workspace 16 silent, match:class ^([Ss]lack)$"
+      "workspace 16 silent, match:class ^(vesktop)$"
+      "workspace 16 silent, match:class ^([Ss]ignal)$"
+      "workspace 16 silent, match:class ^([Ww]asistlos)$"
 
       # Unreal Editor -> HDMI-A-1 (the 4K panel). The title matcher is
       # load-bearing: Slate builds context menus and tooltips as their own
@@ -69,7 +69,7 @@ _: {
       "border_size 6, match:fullscreen 1"
       "border_color rgb(e67e80), match:fullscreen 1"
 
-      # Firefox fullscreen on left monitor (DP-3, workspaces 6-8): fake it.
+      # Firefox fullscreen on left monitor (DP-3, workspaces 11-18): fake it.
       # fullscreen_state is a static rule and doesn't react to the client's
       # live fullscreen request, so Hyprland still took over the whole
       # monitor. suppress_event drops that request entirely (window stays
@@ -79,9 +79,14 @@ _: {
       # windowrulev2 keyword and errors here with "invalid field type".
       # class is `firefox.*` because each profile now launches with its own
       # `--name firefox-<profile>` (see below).
-      "suppress_event fullscreen, match:class ^(firefox.*)$ match:workspace 6"
-      "suppress_event fullscreen, match:class ^(firefox.*)$ match:workspace 7"
-      "suppress_event fullscreen, match:class ^(firefox.*)$ match:workspace 8"
+      "suppress_event fullscreen, match:class ^(firefox.*)$ match:workspace 11"
+      "suppress_event fullscreen, match:class ^(firefox.*)$ match:workspace 12"
+      "suppress_event fullscreen, match:class ^(firefox.*)$ match:workspace 13"
+      "suppress_event fullscreen, match:class ^(firefox.*)$ match:workspace 14"
+      "suppress_event fullscreen, match:class ^(firefox.*)$ match:workspace 15"
+      "suppress_event fullscreen, match:class ^(firefox.*)$ match:workspace 16"
+      "suppress_event fullscreen, match:class ^(firefox.*)$ match:workspace 17"
+      "suppress_event fullscreen, match:class ^(firefox.*)$ match:workspace 18"
 
       # Firefox profiles -> dedicated workspaces. Each profile launches with
       # `--name firefox-<profile>` (keybinds.nix, firefox-with-context,

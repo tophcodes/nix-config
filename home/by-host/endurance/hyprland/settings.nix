@@ -1,4 +1,4 @@
-_: {
+{lib, ...}: {
   wayland.windowManager.hyprland.settings = {
     monitor = [
       # Main display (right)
@@ -62,19 +62,15 @@ _: {
       ];
     };
 
-    workspace = [
-      # Pin workspaces to monitors
-      "1, monitor:HDMI-A-1, default:true"
-      "2, monitor:HDMI-A-1"
-      "3, monitor:HDMI-A-1"
-      "4, monitor:HDMI-A-1"
-      "5, monitor:HDMI-A-1"
-      "6, monitor:DP-3, default:true"
-      "7, monitor:DP-3"
-      "8, monitor:DP-3"
-      # Single tiled window on main monitor: give it breathing room
-      # "w[t1] m[HDMI-A-1], gapsout:15 840 15 840"
-    ];
+    workspace =
+      # Workspace N is a pair across both panels: N on HDMI-A-1, N+10 on DP-3.
+      # keybinds.nix switches both halves together.
+      lib.concatMap (n: [
+        "${toString n}, monitor:HDMI-A-1${lib.optionalString (n == 1) ", default:true"}"
+        "${toString (n + 10)}, monitor:DP-3${lib.optionalString (n == 1) ", default:true"}"
+      ]) (lib.range 1 8);
+    # Single tiled window on main monitor: give it breathing room
+    # "w[t1] m[HDMI-A-1], gapsout:15 840 15 840"
 
     dwindle = {
       # `pseudotile` option removed in Hyprland 0.55; the `pseudo` dispatcher

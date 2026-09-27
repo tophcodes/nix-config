@@ -10,7 +10,7 @@
   # the compositor still holds when the dispatch lands. While both panels sit
   # DPMS-off the LG TV drops its HPD line; aquamarine rescans the connectors and
   # reshuffles CRTCs, DP-3 loses its CRTC in that window and stays disabled with
-  # workspaces 6-8 on a dark panel. Re-assert DPMS per monitor over a few
+  # its workspaces on a dark panel. Re-assert DPMS per monitor over a few
   # seconds so an output that comes back late is covered as well.
   wakeDisplays = pkgs.writeShellScript "wake-displays" ''
     for _ in 1 2 3; do

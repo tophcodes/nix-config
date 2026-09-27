@@ -18,6 +18,48 @@
     then {sheet = entry;}
     else {hidden = true;};
 
+  hyprctl = lib.getExe' pkgs.hyprland "hyprctl";
+  jq = lib.getExe pkgs.jq;
+
+  # Workspace N is a pair: N on HDMI-A-1 and N+10 on DP-3 (settings.nix binds
+  # them). `switch` flips every connected panel to its half of the pair, the
+  # focused one last so it keeps focus; `focusmonitor` warps the cursor, so
+  # its position is put back afterwards. `move` sends the active window to the
+  # pair's half on the focused panel.
+  workspaceSet = pkgs.writeShellScript "workspace-set" ''
+    set -eu
+    focused=$(${hyprctl} -j monitors | ${jq} -r '.[] | select(.focused) | .name')
+    current=$(${hyprctl} -j activeworkspace | ${jq} '.id % 10')
+    case "$2" in
+      next) n=$(( current % 8 + 1 )) ;;
+      prev) n=$(( (current + 6) % 8 + 1 )) ;;
+      *) n=$2 ;;
+    esac
+    case "$1" in
+      switch)
+        batch=$(${hyprctl} -j monitors | ${jq} -r --argjson n "$n" '
+          sort_by(.focused) | .[] | select(.name == "HDMI-A-1" or .name == "DP-3")
+          | "dispatch focusmonitor \(.name) ; dispatch workspace \(if .name == "DP-3" then $n + 10 else $n end) ;"')
+        cursor=$(${hyprctl} cursorpos -j | ${jq} -r '"\(.x) \(.y)"')
+        ${hyprctl} --batch "$batch dispatch movecursor $cursor"
+        ;;
+      move)
+        [ "$focused" = DP-3 ] && n=$(( n + 10 ))
+        ${hyprctl} dispatch movetoworkspacesilent "$n"
+        ;;
+    esac
+  '';
+
+  # `pin` only takes floating windows, so pinning floats the window first and
+  # unpinning tiles it again.
+  togglePin = pkgs.writeShellScript "toggle-pin" ''
+    if [ "$(${hyprctl} -j activewindow | ${jq} .pinned)" = true ]; then
+      ${hyprctl} --batch "dispatch pin ; dispatch settiled"
+    else
+      ${hyprctl} --batch "dispatch setfloating ; dispatch pin"
+    fi
+  '';
+
   workspaces = lib.concatMap (n: let
     s = toString n;
   in [
@@ -26,7 +68,7 @@
         mods = "$mod";
         key = s;
         desc = "Workspace ${s}";
-        action = "workspace, ${s}";
+        action = "exec, ${workspaceSet} switch ${s}";
       }
       // sheetOrHidden n {
         keys = "SUPER + 1..8";
@@ -37,7 +79,7 @@
         mods = "$mod SHIFT";
         key = s;
         desc = "Move window to workspace ${s}";
-        action = "movetoworkspacesilent, ${s}";
+        action = "exec, ${workspaceSet} move ${s}";
       }
       // sheetOrHidden n {
         keys = "SUPER + SHIFT + 1..8";
@@ -187,6 +229,13 @@
       }
       {
         group = "Windows";
+        mods = "$mod SHIFT";
+        key = "p";
+        desc = "Pin to every workspace of this monitor";
+        action = "exec, ${togglePin}";
+      }
+      {
+        group = "Windows";
         mods = "$mod";
         key = "o";
         desc = "Centre a floating window";
@@ -307,21 +356,21 @@
         mods = "$mod";
         key = "bracketright";
         desc = "Next workspace";
-        action = "workspace, e+1";
+        action = "exec, ${workspaceSet} switch next";
       }
       {
         group = "Workspaces";
         mods = "$mod";
         key = "bracketleft";
         desc = "Previous workspace";
-        action = "workspace, e-1";
+        action = "exec, ${workspaceSet} switch prev";
       }
       {
         group = "Workspaces";
         mods = "$mod";
         key = "mouse_down";
         desc = "Next workspace";
-        action = "workspace, e+1";
+        action = "exec, ${workspaceSet} switch next";
         flags = "l";
         note = "scroll";
       }
@@ -330,7 +379,7 @@
         mods = "$mod";
         key = "mouse_up";
         desc = "Previous workspace";
-        action = "workspace, e-1";
+        action = "exec, ${workspaceSet} switch prev";
         flags = "l";
         note = "scroll";
       }
