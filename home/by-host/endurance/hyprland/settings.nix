@@ -19,6 +19,8 @@
       "noctalia"
       # KDE Connect: starts kdeconnectd via dbus + tray indicator
       "kdeconnect-indicator"
+      # Notes vault (~/pod), placed on workspace 11 by a window rule
+      "obsidian"
     ];
 
     env = [

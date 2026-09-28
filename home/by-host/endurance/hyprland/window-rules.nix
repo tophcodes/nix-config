@@ -52,12 +52,10 @@ _: {
       "center 1, match:class ^(dev\\.noctalia\\.Noctalia\\.Settings)$"
       "size 1744 1354, match:class ^(dev\\.noctalia\\.Noctalia\\.Settings)$"
 
-      # Messaging apps -> left vertical monitor (DP-3): Slack on the left half of
-      # workspace 2, the rest on the left half of workspace 1
+      # Vertical monitor (DP-3): the notes vault on the half of pair 1, Slack on
+      # the half of pair 2. Other chat apps open wherever they are launched.
+      "workspace 11 silent, match:class ^(md\\.obsidian\\.Obsidian)$"
       "workspace 12 silent, match:class ^([Ss]lack)$"
-      "workspace 11 silent, match:class ^(vesktop)$"
-      "workspace 11 silent, match:class ^([Ss]ignal)$"
-      "workspace 11 silent, match:class ^([Ww]asistlos)$"
 
       # Unreal Editor -> HDMI-A-1 (the 4K panel). The title matcher is
       # load-bearing: Slate builds context menus and tooltips as their own

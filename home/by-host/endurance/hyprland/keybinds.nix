@@ -64,6 +64,16 @@
     fi
   '';
 
+  # Focuses the notes vault on its own panel, so the main panel keeps its
+  # workspace; starts Obsidian first when it is not running.
+  focusNotes = pkgs.writeShellScript "focus-notes" ''
+    if ${hyprctl} -j clients | ${jq} -e 'any(.class == "md.obsidian.Obsidian")' >/dev/null; then
+      ${hyprctl} dispatch focuswindow "class:^(md\\.obsidian\\.Obsidian)$"
+    else
+      obsidian &
+    fi
+  '';
+
   workspaces = lib.concatMap (n: let
     s = toString n;
   in [
@@ -156,6 +166,13 @@
         key = "n";
         desc = "Toggle do not disturb";
         action = "exec, noctalia msg notification-dnd-toggle";
+      }
+      {
+        group = "Apps";
+        mods = "$mod SHIFT";
+        key = "n";
+        desc = "Notes";
+        action = "exec, ${focusNotes}";
       }
       {
         group = "Apps";
