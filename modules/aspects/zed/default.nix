@@ -1,4 +1,8 @@
-{config, ...}: let
+{
+  config,
+  inputs,
+  ...
+}: let
   # Bound out here on purpose: the home-manager module below shadows `config`
   # with its own, where `flake.lib` does not exist.
   inherit (config.flake.lib) aspects;
@@ -19,6 +23,8 @@ in {
       # names; settings.json disables nil so diagnostics are not doubled.
       pkgs.nixd
       pkgs.alejandra
+      # Run by the "jj: create empty change on …" task in tasks.json.
+      inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.jj-new-pick
     ];
   };
 }
