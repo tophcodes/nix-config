@@ -1,4 +1,5 @@
-theme = "stylix"
+# Terminal palette: helix 25.07 cannot switch themes by itself, kitty can.
+theme = "base16_terminal"
 
 [editor]
 auto-format = true

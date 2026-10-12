@@ -96,7 +96,7 @@ in {
           margin_v = 1;
           start = ["launcher" "workspaces"];
           center = ["clock" "media"];
-          end = ["tray" "notifications" "toph/arctis-battery:battery" "volume" "control-center" "session"];
+          end = ["tray" "notifications" "toph/arctis-battery:battery" "volume" "theme_mode" "control-center" "session"];
           monitor.dp3 = {
             match = "DP-3";
             position = "bottom";
@@ -106,6 +106,14 @@ in {
         };
 
         dock.enabled = false;
+
+        # noctalia's light/dark mode is the session's: darkman relays it to
+        # every app through the portal. theme_mode_changed does not fire for
+        # the mode noctalia starts in, so `started` sends that one.
+        hooks = {
+          started = ''darkman set "$(noctalia msg theme-mode-get)"'';
+          theme_mode_changed = ''darkman set "$NOCTALIA_THEME_MODE"'';
+        };
       };
     };
 

@@ -33,10 +33,13 @@
   "icon_theme": "Zed (Default)",
   "ui_font_size": 19.0,
   "buffer_font_size": 19.0,
+  "auto_install_extensions": {
+    "dracula": true
+  },
   "theme": {
-    "mode": "light",
-    "light": "One Dark",
-    "dark": "Ayu Dark"
+    "mode": "system",
+    "light": "Dracula Light (Alucard)",
+    "dark": "Dracula"
   },
   "terminal": {
     "shell": { "program": "bash" }

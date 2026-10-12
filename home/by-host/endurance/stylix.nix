@@ -51,24 +51,25 @@
     neutral_variant = h c.base03;
   });
 
-  # kitty watches the directory holding each included config file, and recurses
-  # into it. The Stylix kitty target includes its theme by a bare store path,
-  # making that directory /nix/store itself — hundreds of thousands of inotify
-  # watches per kitty instance. That target is therefore off below, and the
-  # identical theme is re-exported into a directory of its own so a single file
-  # gets watched. The font and opacity settings replace what it would set.
+  # kitty follows the portal's color-scheme on its own: it reads these three
+  # files from its config directory and swaps between them live. They come
+  # from a directory of their own because kitty watches the directory of each
+  # file it loads, and a bare store path would make that /nix/store itself.
   #
-  # Narrowing programs.kitty.extraConfig with mkForce is not an alternative:
-  # home-manager feeds settings, font and actionAliases through that same
-  # option, so any override priority discards those along with the include.
-  kittyTheme =
-    pkgs.runCommand "kitty-theme" {}
-    ''
-      mkdir -p $out
-      cp ${c {
+  # kitty-themes' Alucard.conf is an unrelated dark scheme, so the light theme
+  # is rendered from the Alucard palette below.
+  kittyAutoThemes =
+    pkgs.runCommand "kitty-auto-themes" {
+      alucard = c {
         templateRepo = inputs.stylix.inputs.tinted-kitty;
         target = "base16";
-      }} $out/theme.conf
+      };
+    } ''
+      mkdir -p $out
+      themes=${pkgs.kitty-themes}/share/kitty-themes/themes
+      cp $themes/Dracula.conf $out/dark-theme.auto.conf
+      cp $alucard $out/light-theme.auto.conf
+      cp $alucard $out/no-preference-theme.auto.conf
     '';
 in {
   imports = [inputs.stylix.homeModules.stylix];
@@ -78,8 +79,6 @@ in {
     pywalfox-native
   ];
 
-  xdg.configFile."noctalia/palettes/stylix.json".source = noctaliaBase16Palette;
-
   programs.kitty = {
     font = {
       inherit (config.stylix.fonts.monospace) package name;
@@ -87,57 +86,55 @@ in {
     };
 
     settings.background_opacity = toString config.stylix.opacity.terminal;
-
-    extraConfig = ''
-      include ${kittyTheme}/theme.conf
-    '';
   };
 
+  xdg.configFile = {
+    "noctalia/palettes/stylix.json".source = noctaliaBase16Palette;
+    "kitty/light-theme.auto.conf".source = "${kittyAutoThemes}/light-theme.auto.conf";
+    "kitty/dark-theme.auto.conf".source = "${kittyAutoThemes}/dark-theme.auto.conf";
+    "kitty/no-preference-theme.auto.conf".source = "${kittyAutoThemes}/no-preference-theme.auto.conf";
+  };
+
+  # Stylix keeps fonts, cursor and opacity. Colors come from each app's own
+  # light/dark theme pair, switched live through darkman. The scheme below
+  # feeds only the derivations in this repo that still read
+  # config.lib.stylix.colors (the kitty and VS Code light themes, the noctalia
+  # palette).
   stylix = {
     enable = true;
-    autoEnable = true;
+    autoEnable = false;
 
-    # TODO: Figure out a way for automatic dark-/light-mode switching
-    # I've tried:
-    # rose-pine-dawn
-    # rose-pine-moon
-    # ayu-mirage
-    # da-one-white
+    # Alucard, from tinted-schemes base24/alucard.yaml. Inlined because
+    # base16.nix fails to parse that file.
     base16Scheme = {
       system = "base16";
-      name = "vague";
-      author = "vague2k";
-      variant = "dark";
+      name = "Alucard";
+      author = "clach04";
+      variant = "light";
       palette = {
-        base00 = "141415"; # bg
-        base01 = "1c1c24"; # inactiveBg
-        base02 = "252530"; # line / selection
-        base03 = "606079"; # comment
-        base04 = "878787"; # floatBorder
-        base05 = "cdcdcd"; # fg
-        base06 = "c3c3d5"; # property
-        base07 = "aeaed1"; # constant
-        base08 = "d8647e"; # error
-        base09 = "e8b589"; # string (warm beige-orange)
-        base0A = "f3be7c"; # warning / yellow
-        base0B = "7fa563"; # plus / green
-        base0C = "b4d4cf"; # builtin / cyan-teal
-        base0D = "7e98e8"; # hint / blue (functions)
-        base0E = "bb9dbd"; # parameter / purple (keywords)
-        base0F = "6e94b2"; # keyword / steel-blue
+        base00 = "fffbeb";
+        base01 = "ceccc0";
+        base02 = "cfcfde";
+        base03 = "6c664b";
+        base04 = "4c4a3d";
+        base05 = "1f1f1f";
+        base06 = "1f1f1f";
+        base07 = "2c2b31";
+        base08 = "cb3a2a";
+        base09 = "a34d14";
+        base0A = "846e15";
+        base0B = "14710a";
+        base0C = "036a96";
+        base0D = "644ac9";
+        base0E = "a3144d";
+        base0F = "792219";
       };
     };
+    polarity = "light";
 
     targets = {
-      gtk.enable = false;
-      qt.enable = true;
-      firefox.profileNames = ["default" "work" "streaming"];
-      kitty.enable = false;
-      kitty.variant256Colors = true;
-      # noctalia keeps its own builtin theme. The stylix target would force
-      # `theme.source = "custom"` plus a generated palette, and derives
-      # `theme.mode` from the (unset, hence light) polarity.
-      noctalia.enable = false;
+      fontconfig.enable = true;
+      font-packages.enable = true;
     };
 
     opacity.terminal = 1.0;

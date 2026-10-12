@@ -51,10 +51,16 @@
       # xdgOpenUsePortal = true;
       config = {
         common.default = "gtk";
-        hyprland.default = ["hyprland" "gtk"];
+        hyprland = {
+          default = ["hyprland" "gtk"];
+          # darkman answers only color-scheme; gtk still serves every other
+          # setting. Earlier entries win for a key both report.
+          "org.freedesktop.impl.portal.Settings" = ["darkman" "gtk"];
+        };
       };
 
       extraPortals = with pkgs; [
+        darkman
         xdg-desktop-portal-gnome
         xdg-desktop-portal-gtk
         xdg-desktop-portal-hyprland
