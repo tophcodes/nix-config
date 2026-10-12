@@ -7,6 +7,13 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "git": {
+    "diff_base": "default_branch"
+  },
+  "edit_predictions": {
+    "provider": "none"
+  },
+  "show_edit_predictions": false,
   "cli_default_open_behavior": "new_window",
   "agent_servers": {
     "claude-acp": {
@@ -23,6 +30,7 @@
     "dock": "left"
   },
   "agent": {
+    "button": false,
     "dock": "right",
     "favorite_models": [],
     "model_parameters": []
