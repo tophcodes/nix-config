@@ -48,6 +48,10 @@ in {
       '';
     };
   in {
+    # Home Manager ships its own programs.noctalia, which declares the same
+    # options as the upstream module. The settings below follow upstream's
+    # schema, so the built-in one is switched off.
+    disabledModules = ["programs/noctalia"];
     imports = [inputs.noctalia.homeModules.default];
 
     programs.noctalia = {
