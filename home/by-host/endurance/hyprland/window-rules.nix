@@ -47,6 +47,12 @@ _: {
 
       "float on, match:title ^(DevTools)$"
 
+      # steam-gamescope: Remote Play streams the window at its own size, so a
+      # tiled 1884x1014 window reaches the TV letterboxed and upscaled.
+      "float on, match:class ^(gamescope)$"
+      "size 1920 1080, match:class ^(gamescope)$"
+      "center 1, match:class ^(gamescope)$"
+
       # Noctalia Settings
       "float on, match:class ^(dev\\.noctalia\\.Noctalia\\.Settings)$"
       "center 1, match:class ^(dev\\.noctalia\\.Noctalia\\.Settings)$"
