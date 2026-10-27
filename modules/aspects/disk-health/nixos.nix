@@ -8,7 +8,7 @@
     environment.systemPackages = with pkgs; [
       smartmontools
       nvme-cli
-      hdparm # the SATA disks on fram and aepplet, where nvme-cli is useless
+      hdparm # the SATA disks on fram, where nvme-cli is useless
     ];
   };
 }

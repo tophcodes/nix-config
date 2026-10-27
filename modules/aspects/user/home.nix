@@ -7,12 +7,11 @@ in {
   # from `flake.defaultUser` either way, which is what keeps them aligned.
   #
   # What a user *has* stays host-specific (home/by-host/<host>) — toph on
-  # endurance needs far more than toph on vasa. This module only settles who
+  # endurance needs far more than toph on a server. This module only settles who
   # the user is.
   flake.modules.homeManager.user = {
     config,
     lib,
-    pkgs,
     ...
   }: {
     options.fleet.user.name = lib.mkOption {
@@ -26,10 +25,7 @@ in {
     # collects host info.
     config.home = {
       username = config.fleet.user.name;
-      homeDirectory =
-        if pkgs.stdenv.hostPlatform.isDarwin
-        then "/Users/${config.fleet.user.name}"
-        else "/home/${config.fleet.user.name}";
+      homeDirectory = "/home/${config.fleet.user.name}";
     };
   };
 }
