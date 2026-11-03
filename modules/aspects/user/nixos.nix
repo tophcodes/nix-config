@@ -94,7 +94,7 @@ in {
 
       # Kept declared so the secret stays in the rekey set; it is only wired
       # up when a host opts into passwordFile above.
-      bosun.secrets.tophPassword = "toph-password.age";
+      age.secrets.tophPassword.rekeyFile = ./toph-password.age;
     };
   };
 }
