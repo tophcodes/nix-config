@@ -9,6 +9,9 @@
 
   wayland.windowManager.hyprland = {
     enable = true;
+    # Hyprland 0.57 reads only hyprland.lua. Stated explicitly because the
+    # default follows home.stateVersion, which is still 25.11 here.
+    configType = "lua";
     # The session binary + portal come from NixOS `programs.hyprland` (which
     # registers the wayland-session that SDDM reads). HM only writes config;
     # null prevents a second, divergent Hyprland in the profile.

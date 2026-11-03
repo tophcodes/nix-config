@@ -6,7 +6,7 @@
   hyprctl = lib.getExe' pkgs.hyprland "hyprctl";
   loginctl = lib.getExe' pkgs.systemd "loginctl";
 
-  # `hyprctl dispatch dpms on` without a monitor argument only wakes the outputs
+  # A DPMS wake without a monitor argument only wakes the outputs
   # the compositor still holds when the dispatch lands. While both panels sit
   # DPMS-off the LG TV drops its HPD line; aquamarine rescans the connectors and
   # reshuffles CRTCs, DP-3 loses its CRTC in that window and stays disabled with
@@ -15,7 +15,7 @@
   wakeDisplays = pkgs.writeShellScript "wake-displays" ''
     for _ in 1 2 3; do
       for m in $(${hyprctl} -j monitors all | ${lib.getExe pkgs.jq} -r '.[].name'); do
-        ${hyprctl} dispatch dpms on "$m"
+        ${hyprctl} dispatch "hl.dsp.dpms({ action = \"enable\", monitor = \"$m\" })"
       done
       ${pkgs.coreutils}/bin/sleep 2
     done
@@ -93,7 +93,7 @@ in {
         # 45 min: power the panel off entirely (session already locked).
         {
           timeout = 2700;
-          on-timeout = "${hyprctl} dispatch dpms off";
+          on-timeout = "${hyprctl} dispatch 'hl.dsp.dpms({ action = \"disable\" })'";
           on-resume = "${wakeDisplays}";
         }
       ];
