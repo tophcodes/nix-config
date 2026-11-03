@@ -1,5 +1,5 @@
 # The herdr desktop app and herdr-core (`hc`), the terminal runtime it drives.
-# Both come from the nixpkgs-herdr input until the packages land in nixpkgs.
+# Both come from nixpkgs master until a channel carries them.
 {inputs, ...}: {
   flake.modules.homeManager.herdr-app = {
     pkgs,
@@ -78,7 +78,7 @@
       }
     ];
   in {
-    home.packages = with inputs.nixpkgs-herdr.legacyPackages.${pkgs.stdenv.hostPlatform.system}; [
+    home.packages = with inputs.master.legacyPackages.${pkgs.stdenv.hostPlatform.system}; [
       herdr-desktop
       herdr-core
     ];
