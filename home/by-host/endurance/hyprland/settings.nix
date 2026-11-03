@@ -94,11 +94,5 @@
       disable_hyprland_logo = true;
       disable_splash_rendering = true;
     };
-
-    plugin = {
-      hyprbars = {
-        bar_height = 0;
-      };
-    };
   };
 }
