@@ -1,78 +1,30 @@
-# One record per bind. Hyprland gets `bindd` lines from them, binnacle gets a
-# cheat sheet, and neither can drift from the other because both are rendered
-# from this list.
+# One record per bind. Hyprland gets `hl.bind` calls from them, binnacle gets
+# a cheat sheet, and neither can drift from the other because both are
+# rendered from this list.
 #
-# `flags` carries the Hyprland bind flags other than `d` (`r` release, `m`
-# mouse, `l` locked). `sheet` is `false` for a bind the sheet should not list,
-# or an attribute set overriding `keys` and `desc` for the one entry that
-# stands in for a whole run of binds.
+# `action` is a Lua expression: a dispatcher, or a function the bind calls.
+# `opts` carries the bind flags other than the description (`release`,
+# `mouse`, `locked`). `sheet` is `false` for a bind the sheet should not list,
+# or an attribute set overriding `keys` and `desc` for the one entry the sheet
+# lists for a whole run of binds.
 {
   pkgs,
   lib,
   ...
 }: let
-  # The first of a mechanical run carries the entry that stands in for all of
-  # them; the rest stay off the sheet.
+  inherit (lib.generators) mkLuaInline toLua;
+
+  # The first of a mechanical run carries the sheet entry for the whole run;
+  # the rest stay off the sheet.
   sheetOrHidden = n: entry:
     if n == 1
     then {sheet = entry;}
     else {hidden = true;};
 
-  hyprctl = lib.getExe' pkgs.hyprland "hyprctl";
-  jq = lib.getExe pkgs.jq;
+  exec = cmd: "hl.dsp.exec_cmd(${toLua {} cmd})";
 
-  # Workspace N is a pair: N on HDMI-A-1 and N+10 on DP-3 (settings.nix binds
-  # them). `switch` flips every connected panel to its half of the pair, the
-  # focused one last so it keeps focus; `focusmonitor` warps the cursor, so
-  # its position is put back afterwards. `move` sends the active window to the
-  # pair's half on the focused panel.
-  workspaceSet = pkgs.writeShellScript "workspace-set" ''
-    set -eu
-    focused=$(${hyprctl} -j monitors | ${jq} -r '.[] | select(.focused) | .name')
-    current=$(${hyprctl} -j activeworkspace | ${jq} '.id % 10')
-    case "$2" in
-      next) n=$(( current % 8 + 1 )) ;;
-      prev) n=$(( (current + 6) % 8 + 1 )) ;;
-      *) n=$2 ;;
-    esac
-    case "$1" in
-      switch)
-        batch=$(${hyprctl} -j monitors | ${jq} -r --argjson n "$n" '
-          sort_by(.focused) | .[] | select(.name == "HDMI-A-1" or .name == "DP-3")
-          | "dispatch focusmonitor \(.name) ; dispatch workspace \(if .name == "DP-3" then $n + 10 else $n end) ;"')
-        cursor=$(${hyprctl} cursorpos -j | ${jq} -r '"\(.x) \(.y)"')
-        ${hyprctl} --batch "$batch dispatch movecursor $cursor"
-        ;;
-      move)
-        [ "$focused" = DP-3 ] && n=$(( n + 10 ))
-        ${hyprctl} dispatch movetoworkspacesilent "$n"
-        ;;
-    esac
-  '';
-
-  # `pin` only takes floating windows, so pinning floats the window first and
-  # unpinning tiles it again. On the 4K panel a pinned window gets a
-  # centred 16:10 frame, since the tile size it would keep has no set shape.
-  togglePin = pkgs.writeShellScript "toggle-pin" ''
-    if [ "$(${hyprctl} -j activewindow | ${jq} .pinned)" = true ]; then
-      ${hyprctl} --batch "dispatch pin ; dispatch settiled"
-    else
-      ${hyprctl} --batch "dispatch setfloating ; dispatch pin"
-      if [ "$(${hyprctl} -j activeworkspace | ${jq} -r .monitor)" = HDMI-A-1 ]; then
-        ${hyprctl} --batch "dispatch resizeactive exact 40% 45% ; dispatch centerwindow"
-      fi
-    fi
-  '';
-
-  # Focuses the notes vault on its own panel, so the main panel keeps its
-  # workspace; starts Obsidian first when it is not running.
-  focusNotes = pkgs.writeShellScript "focus-notes" ''
-    if ${hyprctl} -j clients | ${jq} -e 'any(.class == "md.obsidian.Obsidian")' >/dev/null; then
-      ${hyprctl} dispatch focuswindow "class:^(md\\.obsidian\\.Obsidian)$"
-    else
-      obsidian &
-    fi
-  '';
+  # Calls `fn` from one of the Lua modules under ./lua (extraLuaFiles below).
+  call = module: fn: "function() require(${toLua {} module}).${fn} end";
 
   workspaces = lib.concatMap (n: let
     s = toString n;
@@ -82,7 +34,7 @@
         mods = "$mod";
         key = s;
         desc = "Workspace ${s}";
-        action = "exec, ${workspaceSet} switch ${s}";
+        action = call "workspace_pair" "switch(${s})";
       }
       // sheetOrHidden n {
         keys = "SUPER + 1..8";
@@ -93,7 +45,7 @@
         mods = "$mod SHIFT";
         key = s;
         desc = "Move window to workspace ${s}";
-        action = "exec, ${workspaceSet} move ${s}";
+        action = call "workspace_pair" "move(${s})";
       }
       // sheetOrHidden n {
         keys = "SUPER + SHIFT + 1..8";
@@ -109,77 +61,77 @@
         mods = "$mod";
         key = "space";
         desc = "Launcher";
-        action = "exec, vicinae toggle";
+        action = exec "vicinae toggle";
       }
       {
         group = "Apps";
         mods = "$mod";
         key = "c";
         desc = "Terminal in the focused checkout";
-        action = "exec, kitty --directory \"$(focused-checkout)\"";
+        action = exec "kitty --directory \"$(focused-checkout)\"";
       }
       {
         group = "Apps";
         mods = "$mod";
         key = "e";
         desc = "File manager in the focused checkout";
-        action = "exec, kitty --directory \"$(focused-checkout)\" yazi";
+        action = exec "kitty --directory \"$(focused-checkout)\" yazi";
       }
       {
         group = "Apps";
         mods = "$mod SHIFT";
         key = "e";
         desc = "Editor in the focused checkout";
-        action = "exec, kitty --directory \"$(focused-checkout)\" hx";
+        action = exec "kitty --directory \"$(focused-checkout)\" hx";
       }
       {
         group = "Apps";
         mods = "$mod";
         key = "b";
         desc = "Browser";
-        action = "exec, firefox -P default --name firefox-default";
+        action = exec "firefox -P default --name firefox-default";
       }
       {
         group = "Apps";
         mods = "$mod";
         key = "v";
         desc = "Clipboard history";
-        action = "exec, vicinae vicinae://launch/clipboard/history";
+        action = exec "vicinae vicinae://launch/clipboard/history";
       }
       {
         group = "Apps";
         mods = "$mod";
         key = "m";
         desc = "Checkout menu";
-        action = "exec, checkout-menu";
+        action = exec "checkout-menu";
       }
       {
         group = "Apps";
         mods = "$mod";
         key = "g";
         desc = "Open a hausgold repository";
-        action = "exec, ${pkgs.harbor.hg-picker}/bin/hg-picker";
+        action = exec "${pkgs.harbor.hg-picker}/bin/hg-picker";
       }
       {
         group = "Apps";
         mods = "$mod";
         key = "n";
         desc = "Toggle do not disturb";
-        action = "exec, noctalia msg notification-dnd-toggle";
+        action = exec "noctalia msg notification-dnd-toggle";
       }
       {
         group = "Apps";
         mods = "$mod SHIFT";
         key = "n";
         desc = "Notes";
-        action = "exec, ${focusNotes}";
+        action = call "window_actions" "focus_notes()";
       }
       {
         group = "Apps";
         mods = "$mod";
         key = "slash";
         desc = "Cheat sheet";
-        action = "exec, qs -c binnacle ipc call sheet toggle";
+        action = exec "qs -c binnacle ipc call sheet toggle";
       }
 
       # Dictation. Both keys are push-to-talk, so each has a release half; the
@@ -189,7 +141,7 @@
         mods = "$mod";
         key = "r";
         desc = "Transcribe at the cursor";
-        action = "exec, voxtype record start";
+        action = exec "voxtype record start";
         note = "hold";
       }
       {
@@ -197,8 +149,8 @@
         mods = "$mod";
         key = "r";
         desc = "Transcribe at the cursor";
-        action = "exec, voxtype record stop";
-        flags = "r";
+        action = exec "voxtype record stop";
+        opts.release = true;
         hidden = true;
       }
       {
@@ -206,7 +158,7 @@
         mods = "$mod";
         key = "d";
         desc = "Capture into the vault inbox";
-        action = "exec, voxtype-capture dictate";
+        action = exec "voxtype-capture dictate";
         note = "hold";
       }
       {
@@ -214,8 +166,8 @@
         mods = "$mod";
         key = "d";
         desc = "Capture into the vault inbox";
-        action = "exec, voxtype-capture stop";
-        flags = "r";
+        action = exec "voxtype-capture stop";
+        opts.release = true;
         hidden = true;
       }
 
@@ -225,77 +177,77 @@
         mods = "$mod";
         key = "q";
         desc = "Close window";
-        action = "killactive";
+        action = "hl.dsp.window.close()";
       }
       {
         group = "Windows";
         mods = "$mod";
         key = "f";
         desc = "Maximise";
-        action = "fullscreen, 1";
+        action = ''hl.dsp.window.fullscreen({ mode = "maximized" })'';
       }
       {
         group = "Windows";
         mods = "$mod";
         key = "t";
         desc = "Toggle floating";
-        action = "togglefloating";
+        action = "hl.dsp.window.float()";
       }
       {
         group = "Windows";
         mods = "$mod";
         key = "p";
         desc = "Pseudo tile";
-        action = "pseudo";
+        action = "hl.dsp.window.pseudo()";
       }
       {
         group = "Windows";
         mods = "$mod SHIFT";
         key = "p";
         desc = "Pin to every workspace of this monitor";
-        action = "exec, ${togglePin}";
+        action = call "window_actions" "toggle_pin()";
       }
       {
         group = "Windows";
         mods = "$mod";
         key = "o";
         desc = "Centre a floating window";
-        action = "centerwindow";
+        action = "hl.dsp.window.center()";
       }
       {
         group = "Windows";
         mods = "$mod SHIFT";
         key = "j";
         desc = "Toggle split direction";
-        action = "layoutmsg, togglesplit";
+        action = ''hl.dsp.layout("togglesplit")'';
       }
       {
         group = "Windows";
         mods = "$mod";
         key = "equal";
         desc = "Widen";
-        action = "resizeactive, 50 0";
+        action = "hl.dsp.window.resize({ x = 50, y = 0, relative = true })";
       }
       {
         group = "Windows";
         mods = "$mod";
         key = "minus";
         desc = "Narrow";
-        action = "resizeactive, -50 0";
+        action = "hl.dsp.window.resize({ x = -50, y = 0, relative = true })";
       }
       {
         group = "Windows";
         mods = "$mod SHIFT";
         key = "equal";
         desc = "Taller";
-        action = "resizeactive, 0 50";
+        action = "hl.dsp.window.resize({ x = 0, y = 50, relative = true })";
       }
       {
         group = "Windows";
         mods = "$mod SHIFT";
         key = "minus";
         desc = "Shorter";
-        action = "resizeactive, 0 -50";
+        action = "hl.dsp.window.resize({ x = 0, y = -50, relative = true })";
       }
 
       # Focus, vim-style, matching the niri keybinds
@@ -304,70 +256,70 @@
         mods = "$mod";
         key = "h";
         desc = "Focus left";
-        action = "movefocus, l";
+        action = ''hl.dsp.focus({ direction = "left" })'';
       }
       {
         group = "Focus";
         mods = "$mod";
         key = "j";
         desc = "Focus down";
-        action = "movefocus, d";
+        action = ''hl.dsp.focus({ direction = "down" })'';
       }
       {
         group = "Focus";
         mods = "$mod";
         key = "k";
         desc = "Focus up";
-        action = "movefocus, u";
+        action = ''hl.dsp.focus({ direction = "up" })'';
       }
       {
         group = "Focus";
         mods = "$mod";
         key = "l";
         desc = "Focus right";
-        action = "movefocus, r";
+        action = ''hl.dsp.focus({ direction = "right" })'';
       }
       {
         group = "Focus";
         mods = "$mod CTRL";
         key = "h";
         desc = "Move window left";
-        action = "movewindow, l";
+        action = ''hl.dsp.window.move({ direction = "left" })'';
       }
       {
         group = "Focus";
         mods = "$mod CTRL";
         key = "j";
         desc = "Move window down";
-        action = "movewindow, d";
+        action = ''hl.dsp.window.move({ direction = "down" })'';
       }
       {
         group = "Focus";
         mods = "$mod CTRL";
         key = "k";
         desc = "Move window up";
-        action = "movewindow, u";
+        action = ''hl.dsp.window.move({ direction = "up" })'';
       }
       {
         group = "Focus";
         mods = "$mod CTRL";
         key = "l";
         desc = "Move window right";
-        action = "movewindow, r";
+        action = ''hl.dsp.window.move({ direction = "right" })'';
       }
       {
         group = "Focus";
         mods = "$mod";
         key = "tab";
         desc = "Next window";
-        action = "cyclenext";
+        action = "hl.dsp.window.cycle_next()";
       }
       {
         group = "Focus";
         mods = "$mod SHIFT";
         key = "tab";
         desc = "Previous window";
-        action = "cyclenext, prev";
+        action = "hl.dsp.window.cycle_next({ next = false })";
       }
     ]
     ++ workspaces
@@ -377,22 +329,22 @@
         mods = "$mod";
         key = "bracketright";
         desc = "Next workspace";
-        action = "exec, ${workspaceSet} switch next";
+        action = call "workspace_pair" "switch(\"next\")";
       }
       {
         group = "Workspaces";
         mods = "$mod";
         key = "bracketleft";
         desc = "Previous workspace";
-        action = "exec, ${workspaceSet} switch prev";
+        action = call "workspace_pair" "switch(\"prev\")";
       }
       {
         group = "Workspaces";
         mods = "$mod";
         key = "mouse_down";
         desc = "Next workspace";
-        action = "exec, ${workspaceSet} switch next";
-        flags = "l";
+        action = call "workspace_pair" "switch(\"next\")";
+        opts.locked = true;
         note = "scroll";
       }
       {
@@ -400,8 +352,8 @@
         mods = "$mod";
         key = "mouse_up";
         desc = "Previous workspace";
-        action = "exec, ${workspaceSet} switch prev";
-        flags = "l";
+        action = call "workspace_pair" "switch(\"prev\")";
+        opts.locked = true;
         note = "scroll";
       }
 
@@ -411,14 +363,14 @@
         mods = "$mod";
         key = "s";
         desc = "Toggle the scratchpad";
-        action = "togglespecialworkspace, magic";
+        action = ''hl.dsp.workspace.toggle_special("magic")'';
       }
       {
         group = "Scratchpad";
         mods = "$mod SHIFT";
         key = "s";
         desc = "Move window to the scratchpad";
-        action = "movetoworkspace, special:magic";
+        action = ''hl.dsp.window.move({ workspace = "special:magic" })'';
       }
 
       # Mouse
@@ -427,8 +379,8 @@
         mods = "$mod";
         key = "mouse:272";
         desc = "Move window";
-        action = "movewindow";
-        flags = "m";
+        action = "hl.dsp.window.drag()";
+        opts.mouse = true;
         note = "drag";
       }
       {
@@ -436,15 +388,27 @@
         mods = "$mod";
         key = "mouse:273";
         desc = "Resize window";
-        action = "resizewindow";
-        flags = "m";
+        action = "hl.dsp.window.resize()";
+        opts.mouse = true;
         note = "drag";
       }
     ];
 
-  # Hyprland side: one attribute per flag combination, each holding its lines.
-  bindLine = b: "${b.mods}, ${b.key}, ${b.desc}, ${b.action}";
-  bindSettings = lib.mapAttrs (_: map bindLine) (lib.groupBy (b: "bindd" + (b.flags or "")) binds);
+  # `$mod` is SUPER; modifiers and the key join with " + ", the form both
+  # Hyprland and the sheet use. `keyName` renders the key itself.
+  keyCombo = keyName: b:
+    lib.concatStringsSep " + " (
+      lib.splitString " " (lib.replaceStrings ["$mod"] ["SUPER"] b.mods)
+      ++ [(keyName b.key)]
+    );
+
+  bindCall = b: {
+    _args = [
+      (keyCombo lib.id b)
+      (mkLuaInline b.action)
+      ({description = b.desc;} // (b.opts or {}))
+    ];
+  };
 
   # Sheet side. Key names Hyprland spells out get a printable form; everything
   # else is upper-cased, which covers letters and leaves digits alone.
@@ -462,11 +426,7 @@
     "mouse:273" = "Right button";
   };
 
-  keyLabel = b:
-    lib.concatStringsSep " + " (
-      lib.splitString " " (lib.replaceStrings ["$mod"] ["SUPER"] b.mods)
-      ++ [(keyNames.${b.key} or (lib.toUpper b.key))]
-    );
+  keyLabel = keyCombo (k: keyNames.${k} or (lib.toUpper k));
 
   listed = lib.filter (b: !(b.hidden or false)) binds;
 
@@ -490,7 +450,14 @@
     inherit groups;
   });
 in {
-  wayland.windowManager.hyprland.settings = {"$mod" = "SUPER";} // bindSettings;
+  wayland.windowManager.hyprland = {
+    settings.bind = map bindCall binds;
+
+    extraLuaFiles = {
+      workspace_pair.content = ./lua/workspace_pair.lua;
+      window_actions.content = ./lua/window_actions.lua;
+    };
+  };
 
   home.file.".config/binnacle/generated/hyprland.json".source = sheet;
 }
