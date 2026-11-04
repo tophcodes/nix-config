@@ -86,7 +86,6 @@
     # ~/.claude/settings.json is live, hand-maintained state, so the hooks are
     # merged in like the claude aspect's skill-sync hook: earlier entries are
     # matched by script name, because the store path moves on every rebuild.
-    # The herdr TUI's own hook (herdr-agent-state.sh) stays untouched.
     home.activation.claudeHerdrStatusHooks = lib.hm.dag.entryAfter ["writeBoundary"] ''
       settings_file="$HOME/.claude/settings.json"
       if [[ ! -f "$settings_file" ]]; then

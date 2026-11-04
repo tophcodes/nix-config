@@ -15,33 +15,3 @@ hidden = false
 
 [editor.whitespace.render]
 tabpad = "all"
-
-
-[keys.normal.space]
-# Sends the buffer to the herdr agent named by its directory and empties it. The
-# send is bound rather than triggered by a write so an autosave cannot fire a
-# prompt. It pipes rather than pointing at the file because `:write` completes
-# asynchronously, so a reader started next to it sees the previous contents.
-# See claude-md-stream.
-ret = [
-  "select_all",
-  ":pipe-to claude-send --stdin '%{buffer_name}'",
-  "delete_selection",
-  ":write!",
-]
-
-# Sends without waiting for the agent to finish: stops the turn it is in and
-# hands over the queue at once.
-"!" = [
-  "select_all",
-  ":pipe-to claude-send --now --stdin '%{buffer_name}'",
-  "delete_selection",
-  ":write!",
-]
-
-# Takes waiting messages back out of the queue and into this buffer. The buffer
-# goes through the command and comes back with the recovered text in front of
-# it, so text typed since is kept: `x` empties the queue and stops the agent,
-# `u` takes back the last message to edit it.
-x = ["select_all", ":pipe claude-send --cancel '%{buffer_name}'"]
-u = ["select_all", ":pipe claude-send --recall '%{buffer_name}'"]
