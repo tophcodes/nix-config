@@ -15,14 +15,24 @@
     # pseudo-terminal Claude Code reads from: the first ancestor whose stdin is
     # a /dev/pts device. Outside a herdr-core terminal (no HC_TERMINAL_ID) it
     # writes nothing.
+    #
+    # The script also labels its terminal `herdr.folder=<cwd>` with the folder
+    # Claude Code works in. herdr reads a terminal's folder from the process,
+    # which stays where the session started, and ignores OSC 7. The explorer
+    # mods and the pane header read the label instead.
     status = pkgs.writeShellApplication {
       name = "claude-herdr-status";
-      runtimeInputs = [pkgs.coreutils pkgs.procps];
+      runtimeInputs = [pkgs.coreutils pkgs.procps pkgs.jq];
       text = ''
         state="$1"
         kind="''${2:-}"
-        cat >/dev/null || true
+        input="$(cat || true)"
         [ -n "''${HC_TERMINAL_ID:-}" ] || exit 0
+
+        folder="$(jq -r '.cwd // empty' <<<"$input" 2>/dev/null || true)"
+        if [ -n "$folder" ] && command -v hc >/dev/null; then
+          hc label "$HC_TERMINAL_ID" "herdr.folder=$folder" >/dev/null 2>&1 || true
+        fi
 
         pid="$PPID"
         tty=""
