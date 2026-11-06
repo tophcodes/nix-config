@@ -16,22 +16,48 @@
     # a /dev/pts device. Outside a herdr-core terminal (no HC_TERMINAL_ID) it
     # writes nothing.
     #
-    # The script also labels its terminal `herdr.folder=<cwd>` with the folder
-    # Claude Code works in. herdr reads a terminal's folder from the process,
-    # which stays where the session started, and ignores OSC 7. The explorer
-    # mods and the pane header read the label instead.
+    # The script also labels its terminal with the repository the session works
+    # in, because herdr reads a terminal's folder from the process, which stays
+    # where the session started, and ignores OSC 7. The explorer mods and the
+    # pane header read the labels:
+    # - `herdr.folder`: the repository of the session's start folder, then of
+    #   each file it writes. A `cd` to look around moves nothing.
+    # - `herdr.folders`: the last eight repositories written to, newest first,
+    #   separated by ":".
     status = pkgs.writeShellApplication {
       name = "claude-herdr-status";
-      runtimeInputs = [pkgs.coreutils pkgs.procps pkgs.jq];
+      runtimeInputs = [pkgs.coreutils pkgs.procps pkgs.jq pkgs.git pkgs.gawk];
       text = ''
         state="$1"
         kind="''${2:-}"
         input="$(cat || true)"
         [ -n "''${HC_TERMINAL_ID:-}" ] || exit 0
 
-        folder="$(jq -r '.cwd // empty' <<<"$input" 2>/dev/null || true)"
+        # The repository holding a folder: jj's root, else git's, else the folder.
+        repo_of() {
+          (command -v jj >/dev/null && jj root --ignore-working-copy -R "$1" 2>/dev/null) \
+            || git -C "$1" rev-parse --show-toplevel 2>/dev/null \
+            || printf '%s\n' "$1"
+        }
+
+        event="$(jq -r '.hook_event_name // empty' <<<"$input" 2>/dev/null || true)"
+        tool="$(jq -r '.tool_name // empty' <<<"$input" 2>/dev/null || true)"
+        folder=""
+        case "$event:$tool" in
+          SessionStart:*)
+            cwd="$(jq -r '.cwd // empty' <<<"$input" 2>/dev/null || true)"
+            [ -z "$cwd" ] || folder="$(repo_of "$cwd")"
+            ;;
+          PostToolUse:Write | PostToolUse:Edit | PostToolUse:MultiEdit | PostToolUse:NotebookEdit)
+            file="$(jq -r '.tool_input.file_path // .tool_input.notebook_path // empty' <<<"$input" 2>/dev/null || true)"
+            dir="$(dirname "$file")"
+            [ -z "$file" ] || [ ! -d "$dir" ] || folder="$(repo_of "$dir")"
+            ;;
+        esac
         if [ -n "$folder" ] && command -v hc >/dev/null; then
-          hc label "$HC_TERMINAL_ID" "herdr.folder=$folder" >/dev/null 2>&1 || true
+          seen="$(hc get "$HC_TERMINAL_ID" --json 2>/dev/null | jq -r '.labels."herdr.folders" // empty' || true)"
+          folders="$(printf '%s\n%s\n' "$folder" "''${seen//:/$'\n'}" | awk 'NF && !s[$0]++' | head -8 | paste -sd:)"
+          hc label "$HC_TERMINAL_ID" "herdr.folder=$folder" "herdr.folders=$folders" >/dev/null 2>&1 || true
         fi
 
         pid="$PPID"
