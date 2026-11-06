@@ -16,6 +16,8 @@ hidden = false
 [editor.whitespace.render]
 tabpad = "all"
 
+# The herdr workbench mods that press these two keys are kept in devkit's
+# herdr/ folder (github.com/tophcodes/devkit).
 # The herdr explorer opens a file here: it writes the path to the file that
 # HERDR_OPEN names, then presses this key. herdr-core cannot type ":", so a
 # bound key carries the command. Wrapped in sh because the shell above is nu.
