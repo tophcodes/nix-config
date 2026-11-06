@@ -21,3 +21,6 @@ tabpad = "all"
 # bound key carries the command. Wrapped in sh because the shell above is nu.
 [keys.normal]
 A-F12 = ":open %sh{sh -c 'cat \"$HERDR_OPEN\"'}"
+# The herdr workbench-tabs mod writes a theme named "herdr" from herdr's colors and
+# presses this key when they change.
+A-F11 = ":theme herdr"
