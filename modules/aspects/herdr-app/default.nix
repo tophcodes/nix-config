@@ -24,6 +24,9 @@
     #   each file it writes. A `cd` to look around moves nothing.
     # - `herdr.folders`: the last eight repositories written to, newest first,
     #   separated by ":".
+    # - `herdr.bases`: `<repository>=<commit>` per repository written to,
+    #   separated by ":": where it stood before the session's first write. The
+    #   explorer diffs from there by default.
     status = pkgs.writeShellApplication {
       name = "claude-herdr-status";
       runtimeInputs = [pkgs.coreutils pkgs.procps pkgs.jq pkgs.git pkgs.gawk];
@@ -55,9 +58,26 @@
             ;;
         esac
         if [ -n "$folder" ] && command -v hc >/dev/null; then
-          seen="$(hc get "$HC_TERMINAL_ID" --json 2>/dev/null | jq -r '.labels."herdr.folders" // empty' || true)"
+          labels="$(hc get "$HC_TERMINAL_ID" --json 2>/dev/null | jq -c '.labels // {}' || echo '{}')"
+          seen="$(jq -r '."herdr.folders" // empty' <<<"$labels")"
           folders="$(printf '%s\n%s\n' "$folder" "''${seen//:/$'\n'}" | awk 'NF && !s[$0]++' | head -8 | paste -sd:)"
-          hc label "$HC_TERMINAL_ID" "herdr.folder=$folder" "herdr.folders=$folders" >/dev/null 2>&1 || true
+          set -- "herdr.folder=$folder" "herdr.folders=$folders"
+
+          # The first write into a repository records where it stood before:
+          # jj's @ from its last snapshot (@- when that was empty), git's HEAD.
+          # --ignore-working-copy keeps jj from snapshotting the write just made.
+          bases="$(jq -r '."herdr.bases" // empty' <<<"$labels")"
+          if [ "$event" = PostToolUse ] && [[ ":$bases:" != *":$folder="* ]]; then
+            base=""
+            if command -v jj >/dev/null && [ -d "$folder/.jj" ]; then
+              base="$(jj log -R "$folder" --ignore-working-copy --no-graph -r @ \
+                -T 'if(empty, parents.map(|c| c.commit_id()).join(","), commit_id)' 2>/dev/null || true)"
+            else
+              base="$(git -C "$folder" rev-parse HEAD 2>/dev/null || true)"
+            fi
+            [ -z "$base" ] || set -- "$@" "herdr.bases=$folder=$base''${bases:+:$bases}"
+          fi
+          hc label "$HC_TERMINAL_ID" "$@" >/dev/null 2>&1 || true
         fi
 
         pid="$PPID"
