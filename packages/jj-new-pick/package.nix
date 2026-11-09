@@ -5,5 +5,5 @@ pkgs.writeShellApplication {
   # than the one home-manager installs, and an older jj must not write to a
   # repo the newer one manages.
   runtimeInputs = [pkgs.fzf pkgs.coreutils];
-  text = builtins.readFile ./jj-new-pick;
+  text = builtins.readFile ./jj-new-pick.sh;
 }
