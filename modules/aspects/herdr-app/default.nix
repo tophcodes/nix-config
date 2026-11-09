@@ -78,10 +78,12 @@
       }
     ];
   in {
-    home.packages = with inputs.master.legacyPackages.${pkgs.stdenv.hostPlatform.system}; [
-      herdr-desktop
-      herdr-core
-    ];
+    home.packages =
+      (with inputs.master.legacyPackages.${pkgs.stdenv.hostPlatform.system}; [
+        herdr-desktop
+        herdr-core
+      ])
+      ++ [inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.pt];
 
     # ~/.claude/settings.json is live, hand-maintained state, so the hooks are
     # merged in like the claude aspect's skill-sync hook: earlier entries are
