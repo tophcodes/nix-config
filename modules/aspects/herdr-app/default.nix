@@ -8,44 +8,9 @@
   }: let
     # Claude Code reports its state to herdr-core and labels its terminal with
     # the repositories the session works in; the script is devkit's
-    # claude-herdr-status, which documents the protocol and the labels.
+    # claude-herdr-status, which documents the protocol and the labels. Its
+    # `hooks` attribute holds the Claude Code hooks that run it.
     status = inputs.devkit.packages.${pkgs.stdenv.hostPlatform.system}.claude-herdr-status;
-
-    # Hook event, optional matcher, and the arguments for the status script.
-    # Stop reports `done`; herdr-app turns it into `idle` once the session is
-    # looked at. PostToolUse clears `blocked` after a permission was granted.
-    hooks = [
-      {
-        event = "SessionStart";
-        args = "idle";
-      }
-      {
-        event = "UserPromptSubmit";
-        args = "working";
-      }
-      {
-        event = "PostToolUse";
-        args = "working";
-      }
-      {
-        event = "Notification";
-        matcher = "permission_prompt";
-        args = "blocked permission";
-      }
-      {
-        event = "Notification";
-        matcher = "elicitation_dialog";
-        args = "blocked question";
-      }
-      {
-        event = "Stop";
-        args = "done";
-      }
-      {
-        event = "SessionEnd";
-        args = "clear";
-      }
-    ];
   in {
     # The workbench layout and its mods, linked from ~/code/devkit/herdr.
     imports = [inputs.devkit.modules.homeManager.herdr];
@@ -67,16 +32,13 @@
         $DRY_RUN_CMD printf '{}' >"$settings_file"
       fi
       $DRY_RUN_CMD ${pkgs.jq}/bin/jq \
-        --arg bin "${status}/bin/claude-herdr-status" \
-        --argjson hooks ${lib.escapeShellArg (builtins.toJSON hooks)} \
+        --argjson hooks ${lib.escapeShellArg (builtins.toJSON status.hooks)} \
         '.hooks |= ((. // {})
            | with_entries(.value |= map(select(
                ((.hooks // []) | any((.command // "") | test("claude-herdr-status"))) | not
              )))
-           | reduce $hooks[] as $h (.;
-               .[$h.event] = ((.[$h.event] // [])
-                 + [({hooks: [{type: "command", command: "\($bin) \($h.args)"}]}
-                     + if $h.matcher then {matcher: $h.matcher} else {} end)])))' \
+           | reduce ($hooks | to_entries[]) as $e (.;
+               .[$e.key] = ((.[$e.key] // []) + $e.value)))' \
         "$settings_file" >"$settings_file.tmp"
       $DRY_RUN_CMD mv "$settings_file.tmp" "$settings_file"
     '';

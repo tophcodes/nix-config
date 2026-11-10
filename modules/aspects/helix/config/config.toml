@@ -21,19 +21,5 @@ tabpad = "all"
 [editor.statusline]
 left = ["mode", "spinner", "file-name", "read-only-indicator", "file-modification-indicator", "file-stale-indicator"]
 
-# The herdr workbench mods that press the keys below are kept in devkit's
-# herdr/ folder (github.com/tophcodes/devkit).
-# The herdr explorer opens a file here: it writes the path to the file that
-# HERDR_OPEN names, then presses this key. herdr-core cannot type ":", so a
-# bound key carries the command. Wrapped in sh because the shell above is nu.
-[keys.normal]
-A-F12 = ":open %sh{sh -c 'cat \"$HERDR_OPEN\"'}"
-# The herdr workbench-tabs mod writes a theme named "herdr" from herdr's colors and
-# presses this key when they change.
-A-F11 = ":theme herdr"
-# The explorer sets the commit every file is diffed against: it writes the full
-# commit id to the HERDR_OPEN file plus ".base" (empty for HEAD) and presses
-# A-F10. For a file shown as it was in a commit, it writes the path of the base
-# content to HERDR_OPEN plus ".base-file" and presses A-F9.
-A-F10 = ":diff-base %sh{sh -c 'cat \"$HERDR_OPEN.base\" 2>/dev/null; true'}"
-A-F9 = ":diff-base-file %sh{sh -c 'cat \"$HERDR_OPEN.base-file\"'}"
+# devkit's Helix overlay binds A-F9 to A-F12 for the herdr workbench mods, in
+# an hx those mods start. A binding of those keys here does not reach that hx.
