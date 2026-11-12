@@ -7,11 +7,9 @@
     # The workbench layout and its mods, linked from ~/code/devkit/herdr.
     imports = [inputs.devkit.modules.homeManager.herdr];
 
-    home.packages =
-      (with inputs.master.legacyPackages.${pkgs.stdenv.hostPlatform.system}; [
-        herdr-desktop
-        herdr-core
-      ])
-      ++ [inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.pt];
+    home.packages = with inputs.master.legacyPackages.${pkgs.stdenv.hostPlatform.system}; [
+      herdr-desktop
+      herdr-core
+    ];
   };
 }
