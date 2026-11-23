@@ -6,7 +6,8 @@
   flake.modules.nixos.herdr-core = {pkgs, ...}: {
     imports = [inputs.devkit.modules.nixos.herdr];
 
-    # Only in nixpkgs master so far.
-    devkit.herdr.core.package = inputs.master.legacyPackages.${pkgs.stdenv.hostPlatform.system}.herdr-core;
+    # Built from packages/herdr-core, the same version the app on endurance
+    # talks to; see the herdr-app aspect for why.
+    devkit.herdr.core.package = inputs.self.packages.${pkgs.stdenv.hostPlatform.system}.herdr-core;
   };
 }
