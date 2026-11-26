@@ -42,3 +42,7 @@ read flake inputs by the names this flake uses (`stylix`, `noctalia`,
 
 Out-of-store links resolve against `/home/toph/code/nix-config`; the
 `checkouts` option maps a flake's store path to its working copy.
+
+## License
+
+MIT, see [LICENSE](LICENSE).
