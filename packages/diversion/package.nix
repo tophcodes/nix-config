@@ -4,7 +4,7 @@
   ...
 }:
 # Diversion's CLI is distributed as a single statically linked Go binary, so it
-# needs no patching — only fetching and installing.
+# needs no patching, only fetching and installing.
 #
 # The upstream URL carries no version: it always serves the current build, and
 # `version` below is what that build reported. The hash is therefore the only
@@ -12,7 +12,7 @@
 # silently swapping the binary. Bump both together when that happens.
 #
 # The vendor's installer additionally appends to shell profiles and registers a
-# launchd agent; neither applies here — PATH comes from the profile and the
+# launchd agent; neither applies here: PATH comes from the profile and the
 # Linux installer registers no service at all.
 pkgs.stdenvNoCC.mkDerivation {
   pname = "diversion";

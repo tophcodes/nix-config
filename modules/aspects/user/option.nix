@@ -3,7 +3,7 @@
   # (nixos.nix) and the home-manager side (home.nix) take their default from
   # here, so the two module systems cannot drift apart.
   #
-  # This travels inward only — read in the outer module scope to seed a
+  # This travels inward only: read in the outer module scope to seed a
   # default, never read back out of a host's evaluated config.
   options.flake.defaultUser = lib.mkOption {
     type = lib.types.str;

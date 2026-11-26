@@ -2,16 +2,16 @@
 #
 # Two files in this repo describe it, and they are not the same kind of thing:
 #
-#   programs.noctalia.settings  — the seed. Rendered to config.toml and applied
+#   programs.noctalia.settings:  the seed. Rendered to config.toml and applied
 #     only for keys the runtime state does not mention. On a machine that has
 #     been used, that is the keys nobody ever touched in the GUI.
-#   config/state/settings.toml  — a mirror of the runtime state, copied here by
+#   config/state/settings.toml:  a mirror of the runtime state, copied here by
 #     the unit below and committed by dotfiles-sync. Never applied; it exists so
 #     GUI changes have a history and show up in review.
 #
 # The asymmetry is forced: noctalia merges its state file over config.toml per
 # key, so anything adjusted at runtime permanently shadows the declaration. The
-# state file cannot simply be linked into the repo either — it sits beside
+# state file cannot be linked into the repo either: it sits beside
 # plaintext credentials and clipboard history in the same directory.
 {
   config,

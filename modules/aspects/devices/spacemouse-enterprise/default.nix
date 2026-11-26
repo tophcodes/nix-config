@@ -1,4 +1,4 @@
-# 3Dconnexion SpaceMouse Enterprise — write access to its USB device node, so
+# 3Dconnexion SpaceMouse Enterprise: write access to its USB device node, so
 # the LCD panel can be driven, and removal of its evdev node from libinput.
 #
 # The panel is addressed over libusb, which writes to /dev/bus/usb/BBB/DDD. The
@@ -26,7 +26,7 @@
 # buttons keep arriving over the spacenav socket.
 #
 # Both rules match on `ATTRS` rather than `ID_VENDOR_ID`, because at 60-3 the
-# usb_id builtin has not run yet — it runs from 60-persistent-input.rules,
+# usb_id builtin has not run yet. It runs from 60-persistent-input.rules,
 # which sorts later.
 {
   flake.modules.nixos.spacemouse-enterprise = {pkgs, ...}: {

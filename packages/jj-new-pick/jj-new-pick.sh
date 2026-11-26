@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Pick a bookmark, tag or workspace working copy with fzf and start a new
 # empty change on it. Text that matches no candidate is passed to `jj new`
 # as typed, so change IDs and revsets work too.

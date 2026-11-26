@@ -16,8 +16,8 @@ in {
       enable = true;
       defaultEditor = true;
 
-      # Emptied so home-manager writes neither config.toml nor languages.toml
-      # — it renders each only when its attrset is non-empty, and both are
+      # Emptied so home-manager writes neither config.toml nor languages.toml:
+      # it renders each only when its attrset is non-empty, and both are
       # linked above. The module stays enabled for the package and
       # defaultEditor.
       settings = lib.mkForce {};

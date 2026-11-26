@@ -60,7 +60,7 @@ in {
             # the parent of the working-copy commit, because that commit is
             # rewritten on every file change and no branch can follow it. The git
             # segment would read "detached at <sha>" forever, so it stands down
-            # (`disable_with_jj` below) and this one answers instead — change id,
+            # (`disable_with_jj` below) and this one answers instead with change id,
             # nearest ancestor bookmark, and whether the working copy is dirty.
             {
               foreground = "p:lavender";

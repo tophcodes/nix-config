@@ -1,4 +1,4 @@
-# yash (YAzi-SHell) — tmux session pairing a yazi instance with a shell,
+# yash (YAzi-SHell): tmux session pairing a yazi instance with a shell,
 # kept in sync via yazi's DDS (ya emit-to).
 #
 #   shell → yazi: automatic, per-shell PWD hook emits a cd to the yazi pane

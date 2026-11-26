@@ -25,12 +25,12 @@
   # `hyprlock` service, declared on the host). It has no animation redraw loop, so
   # it can't repeat the swaylock-plugin 1.8.6 SEGV in output_redraw_timeout that
   # killed the lock surface mid-session and wedged the compositor into the
-  # "your locker crashed, switch TTY" state. Background is solid OLED black —
+  # "your locker crashed, switch TTY" state. Background is solid OLED black:
   # cheap on the panel, no live cmatrix. Single-instance guard so a second
   # lock-session signal doesn't spawn a duplicate locker.
   #
-  # XKB_DEFAULT_*: hyprlock does NOT read Hyprland's `input:kb_layout`/`kb_variant`
-  # — it builds its xkb keymap from these env vars, falling back to plain `us`
+  # XKB_DEFAULT_*: hyprlock does NOT read Hyprland's `input:kb_layout`/`kb_variant`;
+  # it builds its xkb keymap from these env vars, falling back to plain `us`
   # (no `intl` variant) if unset. The compositor here runs us+intl with dead keys
   # ('"`~^), so without this the same keystrokes produce different bytes inside the
   # locker → pam_unix rejects the password (FIDO still works, it doesn't type).
@@ -43,7 +43,7 @@
   '';
 in {
   # Colors (background + input-field) come from Stylix's hyprlock target (base16
-  # palette, near-black base00 — OLED-cheap). Only the non-themed behaviour knobs
+  # palette, near-black base00, OLED-cheap). Only the non-themed behaviour knobs
   # live here.
   programs.hyprlock = {
     enable = true;
@@ -51,7 +51,7 @@ in {
       general.hide_cursor = true;
       # Big clock + date above the (Stylix-themed, centered) input field so the
       # lock screen isn't a bare rectangle. $TIME is a hyprlock builtin; the date
-      # shells out to coreutils (absolute path — the systemd user PATH is thin).
+      # shells out to coreutils (absolute path, since the systemd user PATH is thin).
       label = [
         {
           text = "$TIME";

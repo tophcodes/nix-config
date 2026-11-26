@@ -85,13 +85,13 @@ local function handle(result)
   local status = battery.status or "BATTERY_UNAVAILABLE"
 
   if status == "BATTERY_CHARGING" then
-    show(level >= 0 and (level .. "%") or "chg", name .. " — charging")
+    show(level >= 0 and (level .. "%") or "chg", name .. ": charging")
   elseif status == "BATTERY_AVAILABLE" and level >= 0 then
-    show(level .. "%", name .. " — " .. level .. "%")
+    show(level .. "%", name .. ": " .. level .. "%")
   elseif status == "BATTERY_UNAVAILABLE" then
-    absent(name .. " — off or out of range")
+    absent(name .. ": off or out of range")
   else
-    absent(name .. " — " .. status)
+    absent(name .. ": " .. status)
   end
 end
 

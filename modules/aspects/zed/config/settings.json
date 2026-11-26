@@ -65,8 +65,8 @@
       // it as workspace configuration, so these are nixd's own settings.
       //
       // The flake is addressed as git+file with an absolute path, not path: or
-      // ./. — path: copies the whole ~800 MB worktree into the store on every
-      // edit, and a relative ./. resolves against nixd's working directory,
+      // ./., because path: copies the whole ~800 MB worktree into the store on
+      // every edit, and a relative ./. resolves against nixd's working directory,
       // which is wherever Zed was launched from. git+file sees only tracked
       // files, honours an uncommitted worktree, and matches the ?submodules=1
       // the Justfile uses for the local/* submodule inputs.

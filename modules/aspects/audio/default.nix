@@ -2,7 +2,7 @@
   # The host stack: PipeWire serving all three APIs, plus musnix for the
   # realtime scheduling privileges a low-latency graph needs.
   # Needs the `user` aspect imported alongside it to read `fleet.user`, but
-  # tolerates that host having no user — a headless box can still run the
+  # tolerates that host having no user: a headless box can still run the
   # audio stack, there is just nobody to put in the group.
   flake.modules.nixos.audio = {
     config,
@@ -33,7 +33,7 @@
 
   flake.modules.homeManager.audio = {pkgs, ...}: let
     # Absolute store paths, per ADR-021: the chain must not resolve its
-    # plugins through LADSPA_PATH. The suffix is required — filter-chain only
+    # plugins through LADSPA_PATH. The suffix is required: filter-chain only
     # appends ".so" when resolving a bare name against the search path, not
     # for an absolute path, despite what the upstream example claims.
     # rnnoise over DeepFilterNet: it sounds less processed on this mic and
@@ -41,7 +41,7 @@
     rnnoise = "${pkgs.rnnoise-plugin.ladspa}/lib/ladspa/librnnoise_ladspa.so";
 
     # A voice chain: 80 Hz high-pass into one denoiser, mono throughout.
-    # `capture.props` only — linking a capture chain into the playback graph
+    # `capture.props` only: linking a capture chain into the playback graph
     # merges two independently clocked USB devices into one scheduling group
     # and forces the follower to resample against a clock it does not share.
     mkChain = {

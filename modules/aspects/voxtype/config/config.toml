@@ -1,5 +1,5 @@
 # voxtype's own default config, kept whole because voxtype validates the file
-# as a unit — a partial config is rejected outright ("missing field `hotkey`"),
+# as a unit: a partial config is rejected outright ("missing field `hotkey`"),
 # there is no merge against built-in defaults. `voxtype configure` rewrites
 # this file in place and preserves comments, so the TUI and hand edits coexist.
 
@@ -251,7 +251,7 @@ icon_theme = "emoji"
 storage_path = "/home/toph/pod/system/inbox/transcripts/meetings"
 
 # Unlocks the `voxtype meeting …` subcommands. It does NOT record anything on
-# its own — a meeting still has to be started explicitly.
+# its own; a meeting still has to be started explicitly.
 enabled = true
 
 [meeting.audio]

@@ -1,4 +1,5 @@
-# yash — tmux session with yazi synced to a shell.
+# shellcheck shell=bash
+# yash: tmux session with yazi synced to a shell.
 # Usage: yash [shell-cmd]   (default: login shell)
 SESSION=yash
 SYNC_ID=4242

@@ -5,7 +5,7 @@ _: {
     lib,
     ...
   }: let
-    # The command a package actually installs, which is what tldr indexes —
+    # The command a package installs, which is what tldr indexes:
     # `ripgrep` has no page, `rg` does. mainProgram is the packager's own
     # answer to that question; pname is the fallback when none is declared.
     commandOf = p: p.meta.mainProgram or (p.pname or (lib.getName p));
@@ -17,7 +17,7 @@ _: {
     index = "${config.xdg.dataHome}/cheatsheet/tools";
 
     # Cascade per tool: a tldr page if one exists, otherwise the tool's own
-    # help. Everything here is local — no query leaves the machine.
+    # help. Everything here is local: no query leaves the machine.
     render = ''
       tldr --color always {} 2>/dev/null \
         || { command -v {} >/dev/null 2>&1 && {} --help 2>&1 | head -80; } \
@@ -39,7 +39,7 @@ _: {
         selected="$(fzf --prompt 'tool> ' \
           --preview ${lib.escapeShellArg render} \
           --preview-window 'right:70%:wrap' \
-          --header 'installed tools — enter to open, esc to leave' \
+          --header 'installed tools: enter to open, esc to leave' \
           < "$index")" || exit 0
 
         [ -n "$selected" ] || exit 0

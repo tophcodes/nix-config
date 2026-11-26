@@ -25,7 +25,7 @@ in {
 
     inbox = "$HOME/${transcripts}";
 
-    # Serves this aspect only — it wraps voxtype's verbs with the inbox paths
+    # Serves this aspect only. It wraps voxtype's verbs with the inbox paths
     # and nothing else, which is why it lives here rather than in packages/.
     capture = pkgs.writeShellApplication {
       name = "voxtype-capture";
@@ -91,7 +91,7 @@ in {
                 done
                 if [ -s "$target" ]; then
                   # A dictation is one utterance, so it carries no segment
-                  # timestamps — the capture time is the only one there is,
+                  # timestamps; the capture time is the only one there is,
                   # and it belongs in the note rather than only the filename.
                   stamp="$(basename "$target" .md | sed 's/T/ /; s/-\([0-9][0-9]\)-\([0-9][0-9]\)$/:\1:\2/')"
                   {
@@ -168,7 +168,7 @@ in {
       name = "voxtype-meetwatch";
       runtimeInputs = [voxtype pkgs.pulseaudio pkgs.libnotify pkgs.gnused pkgs.gnugrep];
       text = ''
-        # voxtype itself records too — matching it would make a dictation ask
+        # voxtype itself records too; matching it would make a dictation ask
         # whether to transcribe the dictation.
         watched='firefox|chrom|zoom|teams|discord|slack|element|webex'
 
@@ -234,7 +234,7 @@ in {
 
     home.packages = [voxtype osd capture meetwatch];
 
-    # Reachable from the launcher, which is where these are actually used —
+    # Reachable from the launcher, which is where these get used most;
     # the keybinds are the shortcut, not the only door.
     xdg.desktopEntries = {
       voxtype-dictate = {
@@ -264,7 +264,7 @@ in {
     };
 
     # Push-to-talk is a compositor bind rather than voxtype's built-in evdev
-    # hotkey — the latter needs the user in the `input` group. The bind lives
+    # hotkey: the latter needs the user in the `input` group. The bind lives
     # with the host's other keybinds.
     systemd.user.services.voxtype = {
       Unit = {

@@ -3,7 +3,7 @@
   # its own, where `flake.defaultUser` does not exist.
   inherit (config.flake) defaultUser;
 in {
-  # The host's primary human user. Servers do not import this — they are
+  # The host's primary human user. Servers do not import this; they are
   # reached as root over SSH and have no interactive account at all.
   #
   # Modules that grant this user a group, a path or a service reference
@@ -20,7 +20,7 @@ in {
     options.fleet.user = lib.mkOption {
       default = null;
       description = ''
-        The host's primary human user, or null for a host that has none —
+        The host's primary human user, or null for a host that has none:
         a server reached as root over SSH.
 
         Null rather than absent so that a module can ask whether this host
@@ -49,7 +49,7 @@ in {
               Path to a file holding the hashed password. Left null the
               password stays imperative, which is the right default for a
               workstation: hashedPasswordFile only takes effect with
-              mutableUsers = false, and that disables passwd — including the
+              mutableUsers = false, and that disables passwd, including the
               re-keying pam_gnome_keyring does when the login password changes.
             '';
           };

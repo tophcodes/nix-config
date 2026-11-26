@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# yash-toggle — cycle yazi pane through modes: hidden → dir → multi → full → hidden
+# yash-toggle: cycle the yazi pane through the modes hidden → dir → multi → full → hidden
 SESSION=yash
 t() { tmux -L "$SESSION" "$@"; }
 

@@ -8,7 +8,7 @@
 # without it the OSD crash-loops and gives up: "preferred frontend
 # 'voxtype-osd-gtk4' not installed".
 #
-# Version and src hash track the voxtype package in llm-agents.nix — the
+# Version and src hash track the voxtype package in llm-agents.nix: the
 # frontend speaks the daemon's protocol and the two are released together.
 # Built with the unstable toolchain because the GTK4 dependency graph declares
 # rust-version 1.92 and 25.11 ships 1.91.
