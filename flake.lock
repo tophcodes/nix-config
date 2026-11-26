@@ -119,18 +119,17 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1795463017,
-        "narHash": "sha256-tNCMkY4SVwzlE2tFX6VRaNA8G7Agsxtkj+mb285id0Y=",
-        "ref": "main",
-        "rev": "92f1f8763d01d752167b8a91696a8450a84e73ab",
-        "revCount": 47,
-        "type": "git",
-        "url": "ssh://git@github.com/tophcodes/devkit"
+        "lastModified": 1795694986,
+        "narHash": "sha256-EvNCFF9VxTbMaVv1NsbdTf+WWaN2eQrjTPRXR+mL0uQ=",
+        "owner": "tophcodes",
+        "repo": "devkit",
+        "rev": "4196afbec31e12c5d3129061f55bfe7cd46d192f",
+        "type": "github"
       },
       "original": {
-        "ref": "main",
-        "type": "git",
-        "url": "ssh://git@github.com/tophcodes/devkit"
+        "owner": "tophcodes",
+        "repo": "devkit",
+        "type": "github"
       }
     },
     "fenix": {
