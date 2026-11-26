@@ -8,6 +8,7 @@
 # or an attribute set overriding `keys` and `desc` for the one entry the sheet
 # lists for a whole run of binds.
 {
+  config,
   pkgs,
   lib,
   ...
@@ -104,13 +105,6 @@
         key = "m";
         desc = "Checkout menu";
         action = exec "checkout-menu";
-      }
-      {
-        group = "Apps";
-        mods = "$mod";
-        key = "g";
-        desc = "Open a hausgold repository";
-        action = exec "${pkgs.harbor.hg-picker}/bin/hg-picker";
       }
       {
         group = "Apps";
@@ -392,7 +386,8 @@
         opts.mouse = true;
         note = "drag";
       }
-    ];
+    ]
+    ++ config.fleet.hyprland.extraBinds;
 
   # `$mod` is SUPER; modifiers and the key join with " + ", the form both
   # Hyprland and the sheet use. `keyName` renders the key itself.
@@ -450,7 +445,13 @@
     inherit groups;
   });
 in {
-  wayland.windowManager.hyprland = {
+  options.fleet.hyprland.extraBinds = lib.mkOption {
+    type = lib.types.listOf lib.types.attrs;
+    default = [];
+    description = "Further bind records in the format above, appended to the built-in ones.";
+  };
+
+  config.wayland.windowManager.hyprland = {
     settings.bind = map bindCall binds;
 
     extraLuaFiles = {
@@ -459,5 +460,5 @@ in {
     };
   };
 
-  home.file.".config/binnacle/generated/hyprland.json".source = sheet;
+  config.home.file.".config/binnacle/generated/hyprland.json".source = sheet;
 }
