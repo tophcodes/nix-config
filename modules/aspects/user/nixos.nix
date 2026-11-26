@@ -91,10 +91,6 @@ in {
         members = [cfg.name];
         gid = cfg.uid;
       };
-
-      # Kept declared so the secret stays in the rekey set; it is only wired
-      # up when a host opts into passwordFile above.
-      age.secrets.tophPassword.rekeyFile = ./toph-password.age;
     };
   };
 }
