@@ -46,11 +46,12 @@ in {
             type = lib.types.nullOr lib.types.path;
             default = null;
             description = ''
-              Path to a file holding the hashed password. Left null the
-              password stays imperative, which is the right default for a
-              workstation: hashedPasswordFile only takes effect with
-              mutableUsers = false, and that disables passwd, including the
-              re-keying pam_gnome_keyring does when the login password changes.
+              Path to a file holding the hashed password, such as an age
+              secret. With mutableUsers = true, NixOS writes the hash only when
+              it creates the user; afterwards the password stays imperative,
+              so passwd keeps working, including the re-keying
+              pam_gnome_keyring does when the login password changes. Left
+              null, a new user is created with a locked password.
             '';
           };
 
@@ -72,7 +73,6 @@ in {
       users.users.${cfg.name} = {
         isNormalUser = true;
         inherit (cfg) uid;
-        initialPassword = "wheel";
         hashedPasswordFile = cfg.passwordFile;
         shell = pkgs.fish;
 
